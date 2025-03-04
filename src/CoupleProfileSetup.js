@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function ProfileSetup() {
   const navigate = useNavigate();
-
+  const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -64,7 +64,7 @@ export default function ProfileSetup() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/couple/profile", {
+      const response = await fetch(`${API_URL}/api/couple/profile`, {
         method: "PUT",
         body: formDataToSend, // Don't manually set headers for multipart form-data
       });
