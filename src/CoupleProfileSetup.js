@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function ProfileSetup() {
   const navigate = useNavigate();
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+  const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,6 +26,47 @@ export default function ProfileSetup() {
     }
   }, []);
 
+  // ✅ Fetch profile data when user_id is available
+  useEffect(() => {
+    if (!formData.user_id) return;
+
+    const fetchProfile = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${API_URL}/api/couple/profile/${formData.user_id}`);
+        const data = await response.json();
+
+        if (response.ok && data.status === "success") {
+          const profile = data.data || {};
+
+          // Update formData with the profile data
+          setFormData((prevData) => ({
+            ...prevData,
+            name: profile.username || "",
+            email: profile.email || "",
+            contactNumber: profile.contact_number || "",
+            weddingDate: profile.wedding_date || "",
+            budgetRange: profile.budget || "",
+          }));
+
+          // Set profile image if available
+          if (profile.profile_image) {
+            setPreviewImage(profile.profile_image); // Store the image URL for preview
+          }
+        } else {
+          setMessage(data.message || "❌ Could not fetch profile.");
+        }
+      } catch (error) {
+        console.error("❌ Error fetching profile:", error);
+        setMessage("⚠️ Server error, please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [formData.user_id]); // Trigger only when user_id changes
+
   // ✅ Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,7 +77,7 @@ export default function ProfileSetup() {
     const file = e.target.files[0];
     if (file) {
       setProfileImage(file);
-      setPreviewImage(URL.createObjectURL(file));
+      setPreviewImage(URL.createObjectURL(file)); // Update the preview
     }
   };
 
@@ -60,11 +101,11 @@ export default function ProfileSetup() {
     formDataToSend.append("budgetRange", formData.budgetRange);
 
     if (profileImage) {
-      formDataToSend.append("profileImage", profileImage);
+      formDataToSend.append("profileImage", profileImage); // Append the profile image
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/couple/profile`, {
+      const response = await fetch("http://localhost:3000/api/couple/profile", {
         method: "PUT",
         body: formDataToSend, // Don't manually set headers for multipart form-data
       });
@@ -86,9 +127,9 @@ export default function ProfileSetup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-100 to-purple-200 p-6">
+    <div className="flex items-center justify-center min-h-screen bg-pink-100 p-6">
       <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl border border-gray-200">
-        <h2 className="text-center text-4xl font-bold text-white mb-6 bg-gradient-to-r from-red-400 to-orange-300 py-4 rounded-lg shadow-md">
+        <h2 className="text-center text-4xl font-bold text-white mb-6 bg-orange-500 py-4 rounded-lg shadow-md">
           🎨 Set Your Profile
         </h2>
 
@@ -149,7 +190,7 @@ export default function ProfileSetup() {
                   <span className="text-gray-500">📷 No Image</span>
                 )}
               </div>
-              <label className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer text-sm shadow-lg hover:bg-red-600 transition-all">
+              <label className="mt-4 bg-orange-500 text-white px-4 py-2 rounded-lg cursor-pointer text-sm shadow-lg hover:bg-red-600 transition-all">
                 Upload Your Picture
                 <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
               </label>
@@ -161,7 +202,7 @@ export default function ProfileSetup() {
             <button
               type="submit"
               disabled={loading}
-              className="w-1/2 bg-gradient-to-r from-orange-400 to-red-500 text-white py-3 rounded-lg font-bold shadow-lg hover:opacity-90 transition-all"
+              className="w-1/2 bg-orange-500 text-white py-3 rounded-lg font-bold shadow-lg hover:opacity-90 transition-all"
             >
               {loading ? "🚀 Saving..." : "💾 Save Profile"}
             </button>
