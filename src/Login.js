@@ -9,7 +9,8 @@ const Login = () => {
   const [message, setMessage] = useState(null); // State for displaying messages
   const [messageType, setMessageType] = useState("error"); // 'error' or 'success'
   const navigate = useNavigate();
-
+ // API Base URL from .env (Fallback to localhost for development)
+ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage(null); // Reset message on new submission
@@ -21,7 +22,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/login", {
+      const response = await fetch(`${API_URL}api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
