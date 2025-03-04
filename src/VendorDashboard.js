@@ -11,7 +11,7 @@ export default function VendorDashboard() {
   const authToken = localStorage.getItem("authToken");
   const userRole = localStorage.getItem("userRole");
   const user_id = localStorage.getItem("user_id");
-
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
   useEffect(() => {
     if (!authToken || !email || userRole !== "Vendor") {
       navigate("/login");
@@ -21,7 +21,7 @@ export default function VendorDashboard() {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/vendor/dashboard/${user_id}`,
+          `${API_URL}/api/vendor/dashboard/${user_id}`,
           {
             headers: { Authorization: `Bearer ${authToken}` },
           }
