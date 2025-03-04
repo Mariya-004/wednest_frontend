@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 
 const Venue = () => {
   const [vendors, setVendors] = useState([]);
-
+  const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
   useEffect(() => {
-    fetch("http://localhost:3000/api/vendors/type/Venue")
+    fetch(`${API_URL}/api/vendors/type/Venue`)
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
