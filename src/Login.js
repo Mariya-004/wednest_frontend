@@ -8,9 +8,12 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState(null); // State for displaying messages
   const [messageType, setMessageType] = useState("error"); // 'error' or 'success'
+  const [loading, setLoading] = useState(false); // Loading state for button
   const navigate = useNavigate();
- // API Base URL from .env (Fallback to localhost for development)
- const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+
+  // ✅ Ensure correct API base URL
+  const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage(null); // Reset message on new submission
@@ -20,6 +23,8 @@ const Login = () => {
       setMessageType("error");
       return;
     }
+
+    setLoading(true); // Show loading state
 
     try {
       const response = await fetch(`${API_URL}/api/login`, {
@@ -31,8 +36,9 @@ const Login = () => {
       });
 
       const data = await response.json();
+      setLoading(false); // Hide loading
 
-      if (data.status === "success") {
+      if (response.ok && data.status === "success") {
         setMessage("Login successful! Redirecting...");
         setMessageType("success");
 
@@ -40,28 +46,26 @@ const Login = () => {
         localStorage.setItem("userEmail", email);
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("userRole", role);
-
-
         localStorage.setItem("user_id", data.data.user_id);
-        localStorage.setItem("user_type", data.data.user_type); // ✅ Storing user_type
-        
+        localStorage.setItem("user_type", data.data.user_type);
 
-        // ✅ Redirect based on role
+        // ✅ Redirect based on user_type
         setTimeout(() => {
-          if (data.data.user_type==="Vendor") {
+          if (data.data.user_type === "Vendor") {
             navigate("/vendor-dashboard");
           } else {
             navigate("/couple-dashboard");
           }
-        }, 1500); // Delay for showing success message before redirection
+        }, 1500);
       } else {
-        setMessage(data.message);
+        setMessage(data.message || "Invalid credentials. Please try again.");
         setMessageType("error");
       }
     } catch (error) {
-      console.error("Error logging in", error);
-      setMessage("An error occurred while logging in.");
+      console.error("Error logging in:", error);
+      setMessage("Network error. Please try again later.");
       setMessageType("error");
+      setLoading(false);
     }
   };
 
@@ -104,6 +108,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-800 bg-pink-200 focus:ring-2 focus:ring-pink-400 focus:outline-none"
+              required
             />
 
             {/* Password Input with Toggle Visibility */}
@@ -114,6 +119,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-800 bg-pink-200 focus:ring-2 focus:ring-pink-400 focus:outline-none"
+                required
               />
               <button
                 type="button"
@@ -129,8 +135,9 @@ const Login = () => {
           <button
             type="submit"
             className="w-full mt-6 bg-pink-600 text-white py-3 rounded-lg hover:bg-pink-700 transition"
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
