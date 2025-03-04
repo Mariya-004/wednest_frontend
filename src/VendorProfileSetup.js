@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const VendorProfileSetup = () => {
   const navigate = useNavigate();
-
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
   const [vendorData, setVendorData] = useState({
     businessName: "",
     vendorType: "",
@@ -38,7 +38,7 @@ const VendorProfileSetup = () => {
 
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/vendor/profile/${vendorData.user_id}`);
+        const response = await fetch(`${API_URL}/api/vendor/profile/${vendorData.user_id}`);
         const result = await response.json();
 
         if (result.status === "success") {
@@ -122,7 +122,7 @@ const VendorProfileSetup = () => {
     });
 
     try {
-      const response = await fetch("http://localhost:3000/api/vendor/profile", {
+      const response = await fetch(`${API_URL}/api/vendor/profile`, {
         method: "PUT",
         body: formData,
       });
