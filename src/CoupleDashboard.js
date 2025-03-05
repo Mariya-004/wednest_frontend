@@ -13,6 +13,8 @@ export default function CoupleDashboard() {
         const data = await response.json();
 
         console.log("Fetched Dashboard Data:", data); // Debugging
+        console.log("Profile Image URL:", dashboardData?.profile_image);
+
 
         if (data.status === "success") {
           setDashboardData(data.data);
@@ -64,10 +66,16 @@ export default function CoupleDashboard() {
           <div className="w-32 h-32 bg-gray-400 rounded-full">
             {dashboardData?.profile_image ? (
               <img
-               src={dashboardData?.profile_image?.replace(/^http:/, "https:")}
-                alt="Profile"
-                className="w-full h-full rounded-full object-cover"
-              />
+              src={
+                dashboardData?.profile_image
+                  ? dashboardData.profile_image.startsWith("http")
+                    ? dashboardData.profile_image.replace(/^http:/, "https:")
+                    : `${API_URL}${dashboardData.profile_image}`
+                  : "/default-profile.png" // Use a default image if none is provided
+              }
+              alt="Profile"
+              className="w-full h-full rounded-full object-cover"
+            />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gray-300 rounded-full">
                 No Image
