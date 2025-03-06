@@ -6,6 +6,7 @@ export default function CoupleDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
   const user_id = localStorage.getItem("user_id");
   const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "").replace(/^http:/, "https:");
+  
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -13,8 +14,6 @@ export default function CoupleDashboard() {
         const data = await response.json();
 
         console.log("Fetched Dashboard Data:", data); // Debugging
-        console.log("Profile Image URL:", dashboardData?.profile_image);
-
 
         if (data.status === "success") {
           setDashboardData(data.data);
@@ -28,6 +27,12 @@ export default function CoupleDashboard() {
 
     if (user_id) fetchDashboardData();
   }, [user_id]);
+
+  useEffect(() => {
+    if (dashboardData) {
+      console.log("Profile Image URL:", dashboardData.profile_image); // Log after dashboardData is set
+    }
+  }, [dashboardData]);
 
   const handleLogout = () => {
     localStorage.clear();
