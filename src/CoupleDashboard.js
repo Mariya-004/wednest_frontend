@@ -5,7 +5,7 @@ export default function CoupleDashboard() {
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const user_id = localStorage.getItem("user_id");
-  const API_URL = "/api"; // Use the proxy for API requests
+  const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");// Use the proxy for API requests
   
   useEffect(() => {
     const fetchDashboardData = async () => {
