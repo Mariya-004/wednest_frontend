@@ -5,12 +5,16 @@ export default function CoupleDashboard() {
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const user_id = localStorage.getItem("user_id");
-  const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");; // Use the proxy for API requests
+  const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, ""); // Use the proxy for API requests
   
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch(`${API_URL}/couple/dashboard/${user_id}`);
+        const response = await fetch(`${API_URL}/api/couple/dashboard/${user_id}`);
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Error fetching dashboard: ${errorText}`);
+        }
         const data = await response.json();
 
         console.log("Fetched Dashboard Data:", data); // Debugging
