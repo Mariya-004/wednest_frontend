@@ -76,11 +76,9 @@ export default function CoupleDashboard() {
             {dashboardData?.profile_image ? (
               <img
               src={
-                dashboardData?.profile_image
-                  ? dashboardData.profile_image.startsWith("http")
-                    ? dashboardData.profile_image.replace(/^http:/, "https:")
-                    : `${API_URL}${dashboardData.profile_image}`
-                  : "/default-profile.png" // Use a default image if none is provided
+                dashboardData.profile_image.startsWith("http")
+                  ? dashboardData.profile_image.replace(/^http:/, "https:")
+                  : `${API_URL}${dashboardData.profile_image}`
               }
               alt="Profile"
               className="w-full h-full rounded-full object-cover"
