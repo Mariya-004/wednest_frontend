@@ -58,7 +58,7 @@ const VendorDetails = () => {
             <div className="mt-4">
               <h2 className="text-lg font-semibold">Contact Information</h2>
               <p className="text-gray-600"><strong>Email:</strong> {vendor.email}</p>
-              <p className="text-gray-600"><strong>Phone:</strong> {vendor.phone}</p>
+              <p className="text-gray-600"><strong>Phone:</strong> {vendor.contactNumber}</p>
             </div>
 
             {/* Request to Avail Button */}
