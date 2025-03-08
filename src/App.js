@@ -9,6 +9,14 @@ import CoupleProfileSetup from "./CoupleProfileSetup";
 import VendorProfileSetup from "./VendorProfileSetup";
 import CoupleHome from "./CoupleHome";
 import Venue from "./Venue";
+import Catering from "./Catering";
+import Photography from "./Photography";
+import Beauty from "./Beauty";
+import Designer from "./Designer";
+import Jewelry from "./Jewelry";
+import Cars from "./Cars";
+import Events from "./Events";
+import VendorDetails from "./VendorDetails"; 
 function App() {
   return (
     <Router>
