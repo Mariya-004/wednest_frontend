@@ -27,7 +27,7 @@ const Venue = () => {
         backgroundPosition: "center",
       }}
     >
-      <div className="max-w-6xl w-full bg-white p-6 rounded-lg shadow-md">
+      <div className="max-w-6xl w-full bg-none p-6 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold text-center mb-4">Venue Vendors</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {vendors.length > 0 ? (
