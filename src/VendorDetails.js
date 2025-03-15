@@ -33,7 +33,7 @@ const VendorDetails = () => {
   // Function to send a request to avail the vendor service
   const handleRequest = async () => {
     setRequestStatus(null); // Reset previous messages
-
+    localStorage.setItem("couple_id", data.data.couple_id); // ✅ Store couple_id
     const couple_id = localStorage.getItem("couple_id"); // Assume couple_id is stored after login
     if (!couple_id) {
       setRequestStatus({ type: "error", message: "You must be logged in as a couple to request." });
