@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 const VendorDetails = () => {
   const { vendor_id } = useParams();
+
   const [vendor, setVendor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,7 +41,7 @@ const VendorDetails = () => {
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/couple/request`, {
+      const response = await fetch(`${API_URL}/api/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
