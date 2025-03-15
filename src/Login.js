@@ -48,7 +48,9 @@ const Login = () => {
         localStorage.setItem("userRole", role);
         localStorage.setItem("user_id", data.data.user_id);
         localStorage.setItem("user_type", data.data.user_type);
-
+        if (data.data.user_type === "Couple") {
+          localStorage.setItem("couple_id", data.data.couple_id); // ✅ Fix: Store couple_id
+        }
         // ✅ Redirect based on user_type
         setTimeout(() => {
           if (data.data.user_type === "Vendor") {
