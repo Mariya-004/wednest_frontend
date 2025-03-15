@@ -6,7 +6,9 @@ const VendorDetails = () => {
   const [vendor, setVendor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [requestStatus, setRequestStatus] = useState(null); // For request API response
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+
   useEffect(() => {
     const fetchVendorDetails = async () => {
       try {
@@ -27,6 +29,38 @@ const VendorDetails = () => {
 
     fetchVendorDetails();
   }, [vendor_id]);
+
+  // Function to send a request to avail the vendor service
+  const handleRequest = async () => {
+    setRequestStatus(null); // Reset previous messages
+
+    const couple_id = localStorage.getItem("couple_id"); // Assume couple_id is stored after login
+    if (!couple_id) {
+      setRequestStatus({ type: "error", message: "You must be logged in as a couple to request." });
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/couple/request`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}` // If authentication is required
+        },
+        body: JSON.stringify({ couple_id, vendor_id })
+      });
+
+      const data = await response.json();
+
+      if (data.status === "success") {
+        setRequestStatus({ type: "success", message: "Request sent successfully!" });
+      } else {
+        throw new Error(data.message || "Failed to send request.");
+      }
+    } catch (err) {
+      setRequestStatus({ type: "error", message: err.message });
+    }
+  };
 
   if (loading) return <p className="text-center text-gray-500">Loading vendor details...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -64,9 +98,17 @@ const VendorDetails = () => {
             {/* Request to Avail Button */}
             <button 
               className="mt-6 px-6 py-3 bg-pink-500 text-white rounded-lg shadow-md hover:bg-pink-600 transition"
+              onClick={handleRequest}
             >
               Request to Avail
             </button>
+
+            {/* Show Request Status Message */}
+            {requestStatus && (
+              <p className={`mt-4 text-center font-semibold ${requestStatus.type === "success" ? "text-green-600" : "text-red-600"}`}>
+                {requestStatus.message}
+              </p>
+            )}
           </div>
         </div>
 
