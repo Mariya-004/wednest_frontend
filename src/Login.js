@@ -2,21 +2,20 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [role, setRole] = useState("Couple"); // Default role selection
+  const [role, setRole] = useState("Couple");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState(null); // State for displaying messages
-  const [messageType, setMessageType] = useState("error"); // 'error' or 'success'
-  const [loading, setLoading] = useState(false); // Loading state for button
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("error");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Ensure correct API base URL
   const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setMessage(null); // Reset message on new submission
+    setMessage(null);
 
     if (!email || !password) {
       setMessage("Please enter both email and password.");
@@ -24,47 +23,43 @@ const Login = () => {
       return;
     }
 
-    setLoading(true); // Show loading state
+    setLoading(true);
 
     try {
       const response = await fetch(`${API_URL}/api/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, role }),
       });
 
       const data = await response.json();
-      setLoading(false); // Hide loading
+      setLoading(false);
 
       if (response.ok && data.status === "success") {
         setMessage("Login successful! Redirecting...");
         setMessageType("success");
 
-        // ✅ Store login data in localStorage
+        // ✅ Store user data in localStorage
         localStorage.setItem("userEmail", email);
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("userRole", role);
         localStorage.setItem("user_id", data.data.user_id);
         localStorage.setItem("user_type", data.data.user_type);
+        
         if (data.data.user_type === "Couple") {
-          localStorage.setItem("couple_id", data.data.couple_id); // ✅ Fix: Store couple_id
+          localStorage.setItem("couple_id", data.data.couple_id);
         }
+
         // ✅ Redirect based on user_type
         setTimeout(() => {
-          if (data.data.user_type === "Vendor") {
-            navigate("/vendor-dashboard");
-          } else {
-            navigate("/couple-dashboard");
-          }
+          navigate(data.data.user_type === "Vendor" ? "/vendor-dashboard" : "/couple-dashboard");
         }, 1500);
       } else {
         setMessage(data.message || "Invalid credentials. Please try again.");
         setMessageType("error");
       }
     } catch (error) {
-      console.error("Error logging in:", error);
+      console.error("Login error:", error);
       setMessage("Network error. Please try again later.");
       setMessageType("error");
       setLoading(false);
@@ -72,8 +67,7 @@ const Login = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-pink-100"
+    <div className="min-h-screen flex items-center justify-center bg-pink-100"
       style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundPosition: "center" }}
     >
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md text-center">
@@ -82,11 +76,9 @@ const Login = () => {
 
         {/* Message Display */}
         {message && (
-          <div
-            className={`mt-4 px-4 py-2 rounded-lg text-sm ${
-              messageType === "error" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
-            }`}
-          >
+          <div className={`mt-4 px-4 py-2 rounded-lg text-sm ${
+            messageType === "error" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+          }`}>
             {message}
           </div>
         )}
