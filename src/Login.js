@@ -16,46 +16,46 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage(null);
-
+  
     if (!email || !password) {
       setMessage("Please enter both email and password.");
       setMessageType("error");
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
       const response = await fetch(`${API_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, role }),
       });
-
+  
       const data = await response.json();
       setLoading(false);
-
+  
       if (response.ok && data.status === "success") {
         setMessage("Login successful! Redirecting...");
         setMessageType("success");
-
-        // ✅ Store user data in localStorage
+  
+        // ✅ Store user details in localStorage
         localStorage.setItem("userEmail", email);
-        localStorage.setItem("authToken", data.token);
+        if (data.token) localStorage.setItem("authToken", data.token);
         localStorage.setItem("userRole", role);
-        localStorage.setItem("user_id", data.data.user_id);
-        localStorage.setItem("user_type", data.data.user_type);
-        
-        if (data.data.user_type === "Couple") {
-          localStorage.setItem("couple_id", data.data.couple_id);
+        localStorage.setItem("user_id", data.data?.user_id || "");
+        localStorage.setItem("user_type", data.data?.user_type || "");
+  
+        if (data.data?.user_type === "Couple") {
+          localStorage.setItem("couple_id", data.data?.couple_id || "");
+        } else if (data.data?.user_type === "Vendor") {
+          localStorage.setItem("vendor_id", data.data?.vendor_id || "");
         }
-
-        // ✅ Redirect based on user_type
-        setTimeout(() => {
-          navigate(data.data.user_type === "Vendor" ? "/vendor-dashboard" : "/couple-dashboard");
-        }, 1500);
+  
+        // ✅ Redirect immediately
+        navigate(data.data.user_type === "Vendor" ? "/vendor-dashboard" : "/couple-dashboard");
       } else {
-        setMessage(data.message || "Invalid credentials. Please try again.");
+        setMessage(data?.message || "Invalid credentials. Please try again.");
         setMessageType("error");
       }
     } catch (error) {
@@ -65,6 +65,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-pink-100"
