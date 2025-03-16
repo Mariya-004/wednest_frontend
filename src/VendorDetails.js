@@ -34,8 +34,8 @@ const VendorDetails = () => {
   const handleRequest = async () => {
     setRequestStatus(null);
 
-    const couple_id = localStorage.getItem("couple_id");
-    if (!couple_id) {
+    const couple_id = localStorage.getItem("user_id");
+    if (!user_id) {
       setRequestStatus({ type: "error", message: "You must be logged in as a couple to request." });
       return;
     }
@@ -47,7 +47,7 @@ const VendorDetails = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("authToken")}`
         },
-        body: JSON.stringify({ couple_id, vendor_id })
+        body: JSON.stringify({ user_id, vendor_id })
       });
 
       const data = await response.json();
