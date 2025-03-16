@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 const VendorDetails = () => {
   const { vendor_id } = useParams();
+  console.log("Vendor ID:", vendor_id);
 
   const [vendor, setVendor] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,8 @@ const VendorDetails = () => {
   const handleRequest = async () => {
     setRequestStatus(null);
 
-    const couple_id = localStorage.getItem("couple_id");
+    const couple_id = localStorage.getItem("user_id");
+    console.log("Sending request with:", { user_id, vendor_id });
     if (!couple_id) {
       setRequestStatus({ type: "error", message: "You must be logged in as a couple to request." });
       return;
@@ -45,10 +47,8 @@ const VendorDetails = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`
         },
-        body: JSON.stringify({ couple_id, vendor_id })
-      });
+        body: JSON.stringify({ couple_id, vendor_id })   });
 
       const data = await response.json();
 
