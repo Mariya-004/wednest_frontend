@@ -8,6 +8,7 @@ const VendorDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [requestStatus, setRequestStatus] = useState(null);
+  const [isRequested, setIsRequested] = useState(false);
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
   useEffect(() => {
@@ -29,6 +30,11 @@ const VendorDetails = () => {
     };
 
     fetchVendorDetails();
+    // Check localStorage to persist request status
+    const storedRequestStatus = localStorage.getItem(`request_sent_${vendor_id}`);
+    if (storedRequestStatus === "true") {
+      setIsRequested(true);
+    }
   }, [vendor_id]);
 
   const handleRequest = async () => {
@@ -54,6 +60,8 @@ const VendorDetails = () => {
 
       if (data.status === "success") {
         setRequestStatus({ type: "success", message: "Request sent successfully!" });
+        setIsRequested(true);
+        localStorage.setItem(`request_sent_${vendor_id}`, "true"); // Store status in localStorage
       } else {
         throw new Error(data.message || "Failed to send request.");
       }
@@ -91,10 +99,14 @@ const VendorDetails = () => {
                   <p className="text-gray-600"><strong>Phone:</strong> {vendor.contactNumber}</p>
                 </div>
 
-                <button className="mt-6 px-6 py-3 bg-pink-500 text-white rounded-lg shadow-md hover:bg-pink-600 transition"
+                              {/* Request Button */}
+                <button
+                  className={`mt-6 px-6 py-3 rounded-lg shadow-md transition 
+                  ${isRequested ? "bg-yellow-500 text-black" : "bg-pink-500 text-white hover:bg-pink-600"}`}
                   onClick={handleRequest}
+                  disabled={isRequested} // Disable button if already requested
                 >
-                  Request to Avail
+                  {isRequested ? "Requested" : "Request to Avail"}
                 </button>
 
                 {requestStatus && (
