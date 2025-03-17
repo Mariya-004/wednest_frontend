@@ -17,7 +17,7 @@ import Jewelry from "./Jewelry";
 import Cars from "./Cars";
 import Events from "./Events";
 import VendorDetails from "./VendorDetails"; 
-import cart from "./cart";
+import cart from "./Cart";
 function App() {
   return (
     <Router>
@@ -39,7 +39,7 @@ function App() {
         <Route path="/car-dealers" element={<Cars/>} />
         <Route path="/events" element={<Events/>} />
         <Route path="/vendor/:vendor_id" element={<VendorDetails/>} />
-        <Route path="/cart" element={<cart />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </Router>
   );
