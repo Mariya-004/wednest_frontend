@@ -17,6 +17,20 @@ const Cars = () => {
   }, []);
 
   return (
+    <div className="relative">
+      {/* Header */}
+      <header className="bg-orange-300 h-24 p-6 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
+        <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-20 w-auto" />
+        <div className="flex gap-10 text-2xl">
+          <button onClick={() => navigate("/couple-home")} className="text-lg">
+            <img src="/Home.png" alt="home" className="h-20 w-auto" />
+          </button>
+          <span className="text-3xl">🛒</span>
+          <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">
+            👤
+          </button>
+        </div>
+      </header>
     <div className="min-h-screen flex items-center justify-center bg-pink-100 p-6"
       style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundPosition: "center" }}
     >
@@ -37,6 +51,7 @@ const Cars = () => {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 };
