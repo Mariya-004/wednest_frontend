@@ -17,14 +17,12 @@ const VendorDetails = () => {
 
     const fetchData = async () => {
       try {
-        // Fetch vendor details
         const vendorRes = await fetch(`${API_URL}/api/vendor/details/${vendor_id}`);
         if (!vendorRes.ok) throw new Error(`HTTP error! Status: ${vendorRes.status}`);
         const vendorData = await vendorRes.json();
         if (vendorData.status !== "success") throw new Error("Failed to load vendor details.");
         setVendor(vendorData.data);
 
-        // Check request status only if user is logged in
         if (couple_id) {
           const requestRes = await fetch(`${API_URL}/api/couple/requests/${couple_id}`);
           if (!requestRes.ok) throw new Error(`HTTP error! Status: ${requestRes.status}`);
@@ -75,14 +73,14 @@ const VendorDetails = () => {
     }
   };
 
-  if (loading) return <p className="text-center text-gray-500">Loading vendor details...</p>;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
+  if (loading) return <p className="text-center text-gray-500 pt-28">Loading vendor details...</p>;
+  if (error) return <p className="text-center text-red-500 pt-28">{error}</p>;
 
   return (
-    <div>
+    <div className="relative">
       {/* Header */}
-      <header className="bg-orange-300 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
-        <img src="WEDNEST_LOGO.png" alt="WedNest Logo" className="h-24 w-auto" />
+      <header className="bg-orange-300 h-20 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
+        <img src="WEDNEST_LOGO.png" alt="WedNest Logo" className="h-16 w-auto" />
         <div className="flex gap-10 text-2xl">
           <button onClick={() => navigate("/couple-home")} className="text-lg">
             Home
@@ -94,9 +92,9 @@ const VendorDetails = () => {
         </div>
       </header>
 
-      {/* Vendor Details */}
+      {/* Vendor Details - Added padding to prevent overlap */}
       <div
-        className="min-h-screen flex items-center justify-center bg-pink-100 p-6"
+        className="min-h-screen flex items-center justify-center bg-pink-100 p-6 pt-28"
         style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundPosition: "center" }}
       >
         <div className="max-w-5xl w-full bg-white p-8 rounded-lg shadow-md">
