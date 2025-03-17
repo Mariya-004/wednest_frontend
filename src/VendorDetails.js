@@ -15,8 +15,9 @@ const VendorDetails = () => {
     const fetchVendorDetails = async () => {
       try {
         const response = await fetch(`${API_URL}/api/vendor/details/${vendor_id}`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        
         const data = await response.json();
-
         if (data.status === "success") {
           setVendor(data.data);
         } else {
@@ -30,12 +31,11 @@ const VendorDetails = () => {
     };
 
     fetchVendorDetails();
-    // Check localStorage to persist request status
+
+    // Persist request status from localStorage
     const storedRequestStatus = localStorage.getItem(`request_sent_${vendor_id}`);
-    if (storedRequestStatus === "true") {
-      setIsRequested(true);
-    }
-  }, [vendor_id]);
+    setIsRequested(storedRequestStatus === "true");
+  }, [vendor_id, API_URL]);
 
   const handleRequest = async () => {
     setRequestStatus(null);
@@ -60,8 +60,12 @@ const VendorDetails = () => {
 
       if (data.status === "success") {
         setRequestStatus({ type: "success", message: "Request sent successfully!" });
+
+        // Set request status and persist in localStorage
         setIsRequested(true);
-        localStorage.setItem(`request_sent_${vendor_id}`, "true"); // Store status in localStorage
+        localStorage.setItem(`request_sent_${vendor_id}`, "true");
+
+        console.log("Request status updated: ", true);
       } else {
         throw new Error(data.message || "Failed to send request.");
       }
@@ -99,7 +103,7 @@ const VendorDetails = () => {
                   <p className="text-gray-600"><strong>Phone:</strong> {vendor.contactNumber}</p>
                 </div>
 
-                              {/* Request Button */}
+                {/* Request Button */}
                 <button
                   className={`mt-6 px-6 py-3 rounded-lg shadow-md transition 
                   ${isRequested ? "bg-yellow-500 text-black" : "bg-pink-500 text-white hover:bg-pink-600"}`}
@@ -122,7 +126,7 @@ const VendorDetails = () => {
                 <h2 className="text-xl font-semibold text-center">Service Images</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
                   {vendor.service_images.map((img, index) => (
-                    <img key={index} src={img} alt={`Service ${index + 1}`} className="w-full h-40 object-cover rounded-md shadow" />
+                    <img key={index} src={img} alt={`Service ${index + 1}`} className="w-full h-40 object-cover rounded-md shadow transition-transform hover:scale-105" />
                   ))}
                 </div>
               </div>
