@@ -12,6 +12,7 @@ const VendorDetails = () => {
   const [requestStatus, setRequestStatus] = useState(null);
   const [isRequested, setIsRequested] = useState(false);
   const [cart, setCart] = useState([]);
+  const [cartMessage, setCartMessage] = useState(null); // New state for cart message
 
   useEffect(() => {
     const couple_id = localStorage.getItem("user_id");
@@ -76,14 +77,45 @@ const VendorDetails = () => {
       setRequestStatus({ type: "error", message: err.message });
     }
   };
-  const handleAddToCart = () => {
-    if (!vendor) return;
 
-    const newCart = [...cart, vendor];
-    setCart(newCart);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-    alert(`${vendor.businessName} added to cart!`);
+  const handleAddToCart = async () => {
+    const couple_id = localStorage.getItem("user_id");
+  
+    if (!couple_id) {
+      setCartMessage("You must be logged in as a couple to add items to the cart.");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`${API_URL}/api/cart/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Ensure auth is included
+        },
+        body: JSON.stringify({
+          couple_id,
+          vendor_id,
+          service_type: vendor.vendorType, // Assuming vendorType is the service
+          price: vendor.pricing,
+          request_id: "some_unique_request_id", // Generate or fetch request_id
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (data.status === "success") {
+        setCartMessage(`${vendor.businessName} added to cart successfully!`);
+        setCart((prevCart) => [...prevCart, vendor]); // Update frontend cart (optional)
+      } else {
+        throw new Error(data.message || "Failed to add item to cart.");
+      }
+    } catch (err) {
+      setCartMessage(err.message);
+    }
   };
+  
+
   if (loading) return <p className="text-center text-gray-500 pt-28">Loading vendor details...</p>;
   if (error) return <p className="text-center text-red-500 pt-28">{error}</p>;
 
@@ -169,6 +201,12 @@ const VendorDetails = () => {
                   >
                     Add to Cart 🛒
                   </button>
+
+                  {cartMessage && (
+                    <p className="mt-4 text-center font-semibold text-green-600">
+                      {cartMessage}
+                    </p>
+                  )}
                 </div>
               </div>
 
