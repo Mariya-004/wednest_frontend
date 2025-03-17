@@ -79,8 +79,8 @@ const VendorDetails = () => {
   return (
     <div className="relative">
       {/* Header */}
-      <header className="bg-orange-300 h-20 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
-        <img src="WEDNEST_LOGO.png" alt="WedNest Logo" className="h-16 w-auto" />
+      <header className="bg-orange-300 h-24 p-6 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
+        <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-20 w-auto" />
         <div className="flex gap-10 text-2xl">
           <button onClick={() => navigate("/couple-home")} className="text-lg">
             Home
@@ -94,10 +94,10 @@ const VendorDetails = () => {
 
       {/* Vendor Details - Added padding to prevent overlap */}
       <div
-        className="min-h-screen flex items-center justify-center bg-pink-100 p-6 pt-28"
+        className="min-h-screen flex items-center justify-center bg-pink-100 p-8 pt-36"
         style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundPosition: "center" }}
       >
-        <div className="max-w-5xl w-full bg-white p-8 rounded-lg shadow-md">
+        <div className="max-w-5xl w-full bg-white p-10 rounded-lg shadow-md">
           {vendor && (
             <>
               <h1 className="text-3xl font-bold text-center">{vendor.businessName}</h1>
