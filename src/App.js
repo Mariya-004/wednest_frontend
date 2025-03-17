@@ -11,7 +11,7 @@ import CoupleHome from "./CoupleHome";
 import Venue from "./Venue";
 import Catering from "./Catering";
 import Photography from "./Photography";
-import Beauty from "./beauty";
+import Beauty from "./Beauty";
 import Designer from "./Designer";
 import Jewelry from "./Jewelry";
 import Cars from "./Cars";
