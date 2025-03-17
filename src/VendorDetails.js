@@ -3,15 +3,17 @@ import { useParams } from "react-router-dom";
 
 const VendorDetails = () => {
   const { vendor_id } = useParams();
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
   const [vendor, setVendor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [requestStatus, setRequestStatus] = useState(null);
   const [isRequested, setIsRequested] = useState(false);
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
   useEffect(() => {
+    const couple_id = localStorage.getItem("user_id");
+
     const fetchVendorDetails = async () => {
       try {
         const response = await fetch(`${API_URL}/api/vendor/details/${vendor_id}`);
@@ -30,13 +32,27 @@ const VendorDetails = () => {
       }
     };
 
-    fetchVendorDetails();
+    const checkRequestStatus = async () => {
+      if (!couple_id) return;
 
-    // Check localStorage to persist request status
-    const storedRequestStatus = localStorage.getItem(`request_sent_${vendor_id}`);
-    if (storedRequestStatus === "true") {
-      setIsRequested(true);
-    }
+      try {
+        const response = await fetch(`${API_URL}/api/couple/requests/${couple_id}`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const data = await response.json();
+        if (data.status === "success") {
+          const hasRequested = data.data.some(request => request.vendor_id._id === vendor_id);
+          setIsRequested(hasRequested);
+        } else {
+          throw new Error(data.message || "Failed to check request status.");
+        }
+      } catch (err) {
+        console.error("Error fetching request status:", err.message);
+      }
+    };
+
+    fetchVendorDetails();
+    checkRequestStatus();
   }, [vendor_id, API_URL]);
 
   const handleRequest = async () => {
@@ -62,12 +78,7 @@ const VendorDetails = () => {
 
       if (data.status === "success") {
         setRequestStatus({ type: "success", message: "Request sent successfully!" });
-
-        // Set request status and persist in localStorage
         setIsRequested(true);
-        localStorage.setItem(`request_sent_${vendor_id}`, "true");
-
-        console.log("Request status updated: ", true);
       } else {
         throw new Error(data.message || "Failed to send request.");
       }
