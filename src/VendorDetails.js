@@ -86,34 +86,39 @@ const VendorDetails = () => {
       return;
     }
   
+    console.log("couple_id being sent:", couple_id); // ✅ Debugging
+  
     try {
       const response = await fetch(`${API_URL}/api/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Ensure auth is included
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
         body: JSON.stringify({
           couple_id,
           vendor_id,
-          service_type: vendor.vendorType, // Assuming vendorType is the service
+          service_type: vendor.vendorType,
           price: vendor.pricing,
-          request_id: "some_unique_request_id", // Generate or fetch request_id
+          request_id: "some_unique_request_id",
         }),
       });
   
       const data = await response.json();
+      console.log("API Response:", data); // ✅ Debugging
   
       if (data.status === "success") {
         setCartMessage(`${vendor.businessName} added to cart successfully!`);
-        setCart((prevCart) => [...prevCart, vendor]); // Update frontend cart (optional)
+        setCart((prevCart) => [...prevCart, vendor]);
       } else {
         throw new Error(data.message || "Failed to add item to cart.");
       }
     } catch (err) {
+      console.error("Error adding to cart:", err); // ✅ Debugging
       setCartMessage(err.message);
     }
   };
+  
   
 
   if (loading) return <p className="text-center text-gray-500 pt-28">Loading vendor details...</p>;
