@@ -40,7 +40,7 @@ function App() {
         <Route path="/car-dealers" element={<Cars/>} />
         <Route path="/events" element={<Events/>} />
         <Route path="/vendor/:vendor_id" element={<VendorDetails/>} />
-        <Route path="/cart" element={<Cart/>} /> {/* Corrected usage */}
+        <Route path="/Cart" element={<Cart/>} /> {/* Corrected usage */}
       </Routes>
     </Router>
   );
