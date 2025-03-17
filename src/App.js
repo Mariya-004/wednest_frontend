@@ -17,7 +17,7 @@ import Jewelry from "./Jewelry";
 import Cars from "./Cars";
 import Events from "./Events";
 import VendorDetails from "./VendorDetails"; 
-import cart from "./Cart";
+import Cart from "./Cart";
 function App() {
   return (
     <Router>
