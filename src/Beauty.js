@@ -6,7 +6,7 @@ const Beauty = () => {
   const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000"; 
   useEffect(() => {
-    fetch(`${API_URL}/api/vendors/type/Beauty And Wellness`)
+    fetch(`${API_URL}/api/vendors/type/Beauty and Wellness`)
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") setVendors(data.data);
