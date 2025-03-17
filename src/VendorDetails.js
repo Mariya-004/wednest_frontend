@@ -9,6 +9,7 @@ const VendorDetails = () => {
   const [vendor, setVendor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [requestStatus, setRequestStatus] = useState(null);
   const [isRequested, setIsRequested] = useState(false);
   const [cart, setCart] = useState([]);
 
@@ -22,12 +23,10 @@ const VendorDetails = () => {
         const vendorData = await vendorRes.json();
         if (vendorData.status !== "success") throw new Error("Failed to load vendor details.");
         setVendor(vendorData.data);
-
-        // Load cart from localStorage
+       
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
         setCart(storedCart);
-
-        // Check if already requested
+        // check if already requested
         if (couple_id) {
           const requestRes = await fetch(`${API_URL}/api/couple/requests/${couple_id}`);
           if (!requestRes.ok) throw new Error(`HTTP error! Status: ${requestRes.status}`);
@@ -47,7 +46,36 @@ const VendorDetails = () => {
     fetchData();
   }, [vendor_id, API_URL]);
 
-  // Add to Cart Function
+  const handleRequest = async () => {
+    setRequestStatus(null);
+    const couple_id = localStorage.getItem("user_id");
+
+    if (!couple_id) {
+      setRequestStatus({ type: "error", message: "You must be logged in as a couple to request." });
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/request`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+        body: JSON.stringify({ couple_id, vendor_id }),
+      });
+
+      const data = await response.json();
+      if (data.status === "success") {
+        setRequestStatus({ type: "success", message: "Request sent successfully!" });
+        setIsRequested(true);
+      } else {
+        throw new Error(data.message || "Failed to send request.");
+      }
+    } catch (err) {
+      setRequestStatus({ type: "error", message: err.message });
+    }
+  };
   const handleAddToCart = () => {
     if (!vendor) return;
 
@@ -56,7 +84,6 @@ const VendorDetails = () => {
     localStorage.setItem("cart", JSON.stringify(newCart));
     alert(`${vendor.businessName} added to cart!`);
   };
-
   if (loading) return <p className="text-center text-gray-500 pt-28">Loading vendor details...</p>;
   if (error) return <p className="text-center text-red-500 pt-28">{error}</p>;
 
@@ -69,19 +96,14 @@ const VendorDetails = () => {
           <button onClick={() => navigate("/couple-home")} className="text-lg">
             <img src="/Home.png" alt="home" className="h-5 w-auto" />
           </button>
-          <button onClick={() => navigate("/cart")} className="text-3xl relative">
-            🛒 
-            {cart.length > 0 && (
-              <span className="absolute -top-2 -right-3 bg-red-500 text-white px-2 rounded-full text-xs">
-                {cart.length}
-              </span>
-            )}
+          <span className="text-3xl">🛒</span>
+          <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">
+            👤
           </button>
-          <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">👤</button>
         </div>
       </header>
 
-      {/* Vendor Details */}
+      {/* Vendor Details - Added padding to prevent overlap */}
       <div
         className="min-h-screen flex items-center justify-center bg-pink-100 p-8 pt-36"
         style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundPosition: "center" }}
@@ -120,6 +142,26 @@ const VendorDetails = () => {
                     </p>
                   </div>
 
+                  {/* Request Button */}
+                  <button
+                    className={`mt-6 px-6 py-3 rounded-lg shadow-md transition ${
+                      isRequested ? "bg-yellow-500 text-black" : "bg-pink-500 text-white hover:bg-pink-600"
+                    }`}
+                    onClick={handleRequest}
+                    disabled={isRequested}
+                  >
+                    {isRequested ? "Requested" : "Request to Avail"}
+                  </button>
+
+                  {requestStatus && (
+                    <p
+                      className={`mt-4 text-center font-semibold ${
+                        requestStatus.type === "success" ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {requestStatus.message}
+                    </p>
+                  )}
                   {/* Add to Cart Button */}
                   <button
                     className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition"
@@ -130,7 +172,6 @@ const VendorDetails = () => {
                 </div>
               </div>
 
-              {/* Service Images Section */}
               {vendor.service_images && vendor.service_images.length > 0 && (
                 <div className="mt-6">
                   <h2 className="text-xl font-semibold text-center">Service Images</h2>
