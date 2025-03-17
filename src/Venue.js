@@ -25,7 +25,7 @@ const Venue = () => {
         <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-20 w-auto" />
         <div className="flex gap-10 text-2xl">
           <button onClick={() => navigate("/couple-home")} className="text-lg">
-            <img src="/Home.png" alt="home" className="h-3 w-auto" />
+            <img src="/Home.png" alt="home" className="h-5 w-auto" />
           </button>
           <span className="text-3xl">🛒</span>
           <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">
