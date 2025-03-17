@@ -86,7 +86,7 @@ const VendorDetails = () => {
       return;
     }
   
-    console.log("couple_id being sent:", couple_id); // ✅ Debugging
+    const request_id = `${vendor_id}-${Date.now()}`; // Generate a unique request ID
   
     try {
       const response = await fetch(`${API_URL}/api/cart/add`, {
@@ -99,22 +99,22 @@ const VendorDetails = () => {
           couple_id,
           vendor_id,
           service_type: vendor.vendorType,
-          price: vendor.pricing,
-          request_id: "some_unique_request_id",
+          price: Number(vendor.pricing), // Ensure price is a number
+          request_id,
         }),
       });
   
       const data = await response.json();
-      console.log("API Response:", data); // ✅ Debugging
-  
+      
       if (data.status === "success") {
         setCartMessage(`${vendor.businessName} added to cart successfully!`);
-        setCart((prevCart) => [...prevCart, vendor]);
+        setCart((prevCart) => [...prevCart, { ...vendor, request_id }]);
+        localStorage.setItem("cart", JSON.stringify([...cart, { ...vendor, request_id }]));
       } else {
         throw new Error(data.message || "Failed to add item to cart.");
       }
     } catch (err) {
-      console.error("Error adding to cart:", err); // ✅ Debugging
+      console.error("Error adding to cart:", err);
       setCartMessage(err.message);
     }
   };
