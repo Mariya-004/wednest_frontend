@@ -79,14 +79,30 @@ const VendorDetails = () => {
   };
 
   const handleAddToCart = async () => {
+    setCartMessage(null); // Reset previous messages
     const couple_id = localStorage.getItem("user_id");
   
     if (!couple_id) {
-      setCartMessage("You must be logged in as a couple to add items to the cart.");
+      setCartMessage("You must be logged in to add items to your cart.");
       return;
     }
   
-    const request_id = `${vendor_id}-${Date.now()}`; // Generate a unique request ID
+    if (!vendor) {
+      setCartMessage("Vendor details are missing.");
+      return;
+    }
+  
+    // Prepare request payload
+    const requestBody = {
+      couple_id,
+      vendor_id: vendor._id,
+      service_type: vendor.vendorType,
+      price: vendor.pricing,
+      request_id: `req-${Date.now()}` // Generate a unique request ID
+    };
+  
+    // Log the request payload
+    console.log("🛒 Add to Cart Request Body:", requestBody);
   
     try {
       const response = await fetch(`${API_URL}/api/cart/add`, {
@@ -95,26 +111,22 @@ const VendorDetails = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
-        body: JSON.stringify({
-          couple_id,
-          vendor_id,
-          service_type: vendor.vendorType,
-          price: Number(vendor.pricing), // Ensure price is a number
-          request_id,
-        }),
+        body: JSON.stringify(requestBody),
       });
   
       const data = await response.json();
-      
+  
+      console.log("🛒 Add to Cart Response:", data);
+  
       if (data.status === "success") {
-        setCartMessage(`${vendor.businessName} added to cart successfully!`);
-        setCart((prevCart) => [...prevCart, { ...vendor, request_id }]);
-        localStorage.setItem("cart", JSON.stringify([...cart, { ...vendor, request_id }]));
+        setCart([...cart, data.data]); // Update cart state
+        localStorage.setItem("cart", JSON.stringify([...cart, data.data])); // Store cart in localStorage
+        setCartMessage("Item added to cart successfully! 🛒");
       } else {
         throw new Error(data.message || "Failed to add item to cart.");
       }
     } catch (err) {
-      console.error("Error adding to cart:", err);
+      console.error("🚨 Add to Cart Error:", err);
       setCartMessage(err.message);
     }
   };
