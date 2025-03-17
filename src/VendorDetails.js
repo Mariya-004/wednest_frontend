@@ -32,9 +32,11 @@ const VendorDetails = () => {
 
     fetchVendorDetails();
 
-    // Persist request status from localStorage
+    // Check localStorage to persist request status
     const storedRequestStatus = localStorage.getItem(`request_sent_${vendor_id}`);
-    setIsRequested(storedRequestStatus === "true");
+    if (storedRequestStatus === "true") {
+      setIsRequested(true);
+    }
   }, [vendor_id, API_URL]);
 
   const handleRequest = async () => {
