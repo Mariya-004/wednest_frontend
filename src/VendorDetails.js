@@ -12,6 +12,7 @@ const VendorDetails = () => {
   const [requestStatus, setRequestStatus] = useState(null);
   const [isRequested, setIsRequested] = useState(false);
   const [cart, setCart] = useState([]);
+  const [cartMessage, setCartMessage] = useState(null);
 
   useEffect(() => {
     const couple_id = localStorage.getItem("user_id");
@@ -23,10 +24,10 @@ const VendorDetails = () => {
         const vendorData = await vendorRes.json();
         if (vendorData.status !== "success") throw new Error("Failed to load vendor details.");
         setVendor(vendorData.data);
-       
+
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
         setCart(storedCart);
-        // check if already requested
+
         if (couple_id) {
           const requestRes = await fetch(`${API_URL}/api/couple/requests/${couple_id}`);
           if (!requestRes.ok) throw new Error(`HTTP error! Status: ${requestRes.status}`);
@@ -76,14 +77,20 @@ const VendorDetails = () => {
       setRequestStatus({ type: "error", message: err.message });
     }
   };
+
   const handleAddToCart = () => {
     if (!vendor) return;
 
     const newCart = [...cart, vendor];
     setCart(newCart);
     localStorage.setItem("cart", JSON.stringify(newCart));
-    alert(`${vendor.businessName} added to cart!`);
+    setCartMessage(`${vendor.businessName} has been added to your cart!`);
+
+    setTimeout(() => {
+      setCartMessage(null);
+    }, 3000);
   };
+
   if (loading) return <p className="text-center text-gray-500 pt-28">Loading vendor details...</p>;
   if (error) return <p className="text-center text-red-500 pt-28">{error}</p>;
 
@@ -96,44 +103,39 @@ const VendorDetails = () => {
           <button onClick={() => navigate("/couple-home")} className="text-lg">
             <img src="/Home.png" alt="home" className="h-5 w-auto" />
           </button>
-          <span className="text-3xl">🛒</span>
-          <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">
-            👤
-          </button>
+          <button onClick={() => navigate("/cart")} className="text-3xl">🛒</button>
+          <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">👤</button>
         </div>
       </header>
 
-      {/* Vendor Details - Added padding to prevent overlap */}
-      <div
-        className="min-h-screen flex items-center justify-center bg-pink-100 p-8 pt-36"
-        style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundPosition: "center" }}
-      >
-        <div className="max-w-5xl w-full bg-white p-10 rounded-lg shadow-md">
+      {/* Vendor Details */}
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-8 pt-36">
+        <div className="max-w-5xl w-full bg-white p-10 rounded-lg shadow-lg">
           {vendor && (
             <>
-              <h1 className="text-3xl font-bold text-center">{vendor.businessName}</h1>
+              <h1 className="text-4xl font-extrabold text-center text-gray-800">{vendor.businessName}</h1>
 
-              <div className="flex flex-col md:flex-row items-center md:items-start mt-6">
+              <div className="flex flex-col md:flex-row items-center md:items-start mt-8">
                 <img
                   src={vendor.profile_image || "/placeholder.jpg"}
                   alt={vendor.businessName}
-                  className="w-56 h-56 object-cover rounded-lg shadow-md"
+                  className="w-60 h-60 object-cover rounded-lg shadow-md"
                 />
 
-                <div className="md:ml-8 mt-4 md:mt-0 text-center md:text-left flex-1">
-                  <p className="text-gray-600">
+                <div className="md:ml-10 mt-4 md:mt-0 text-center md:text-left flex-1">
+                  <p className="text-lg text-gray-600">
                     <strong>Type:</strong> {vendor.vendorType}
                   </p>
-                  <p className="text-gray-600">
+                  <p className="text-lg text-gray-600">
                     <strong>Location:</strong> {vendor.location}
                   </p>
-                  <p className="text-green-600 font-bold">
+                  <p className="text-lg text-green-600 font-bold">
                     <strong>Pricing:</strong> ${vendor.pricing}
                   </p>
-                  <p className="text-gray-700 mt-2">{vendor.serviceDescription}</p>
+                  <p className="text-gray-700 mt-4">{vendor.serviceDescription}</p>
 
-                  <div className="mt-4">
-                    <h2 className="text-lg font-semibold">Contact Information</h2>
+                  <div className="mt-6">
+                    <h2 className="text-xl font-semibold">Contact Information</h2>
                     <p className="text-gray-600">
                       <strong>Email:</strong> {vendor.email}
                     </p>
@@ -142,51 +144,43 @@ const VendorDetails = () => {
                     </p>
                   </div>
 
-                  {/* Request Button */}
-                  <button
-                    className={`mt-6 px-6 py-3 rounded-lg shadow-md transition ${
-                      isRequested ? "bg-yellow-500 text-black" : "bg-pink-500 text-white hover:bg-pink-600"
-                    }`}
-                    onClick={handleRequest}
-                    disabled={isRequested}
-                  >
-                    {isRequested ? "Requested" : "Request to Avail"}
-                  </button>
+                  {/* Buttons */}
+                  <div className="mt-6 flex flex-col gap-4">
+                    <button
+                      className={`px-6 py-3 rounded-lg shadow-md text-lg font-semibold transition ${
+                        isRequested ? "bg-yellow-500 text-black" : "bg-pink-500 text-white hover:bg-pink-600"
+                      }`}
+                      onClick={handleRequest}
+                      disabled={isRequested}
+                    >
+                      {isRequested ? "Requested" : "Request to Avail"}
+                    </button>
+
+                    <button
+                      className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md text-lg font-semibold hover:bg-blue-600 transition"
+                      onClick={handleAddToCart}
+                    >
+                      Add to Cart 🛒
+                    </button>
+                  </div>
 
                   {requestStatus && (
                     <p
-                      className={`mt-4 text-center font-semibold ${
+                      className={`mt-4 text-center text-lg font-semibold ${
                         requestStatus.type === "success" ? "text-green-600" : "text-red-600"
                       }`}
                     >
                       {requestStatus.message}
                     </p>
                   )}
-                  {/* Add to Cart Button */}
-                  <button
-                    className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition"
-                    onClick={handleAddToCart}
-                  >
-                    Add to Cart 🛒
-                  </button>
+
+                  {cartMessage && (
+                    <div className="mt-4 bg-green-100 text-green-800 p-3 rounded-md text-center font-semibold">
+                      {cartMessage}
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {vendor.service_images && vendor.service_images.length > 0 && (
-                <div className="mt-6">
-                  <h2 className="text-xl font-semibold text-center">Service Images</h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
-                    {vendor.service_images.map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt={`Service ${index + 1}`}
-                        className="w-full h-40 object-cover rounded-md shadow transition-transform hover:scale-105"
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
             </>
           )}
         </div>
