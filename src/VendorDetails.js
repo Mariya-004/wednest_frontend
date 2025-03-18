@@ -25,8 +25,17 @@ const VendorDetails = () => {
         if (vendorData.status !== "success") throw new Error("Failed to load vendor details.");
         setVendor(vendorData.data);
 
-        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-        setCart(storedCart);
+        // Fetch cart from backend
+        if (couple_id) {
+          const cartRes = await fetch(`${API_URL}/api/cart/${couple_id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          });
+          const cartData = await cartRes.json();
+          setCart(cartData.data || []);
+        }
 
         if (couple_id) {
           const requestRes = await fetch(`${API_URL}/api/couple/requests/${couple_id}`);
@@ -92,17 +101,12 @@ const VendorDetails = () => {
       );
 
       const data = await response.json();
-
-      console.log("🌐 Full response from /api/request-id:", data);
-
       if (response.ok && data.status === "success") {
-        console.log("✅ Request ID fetched:", data.request_id);
         return data.request_id;
       } else {
         throw new Error(data.message || "Request ID not found.");
       }
     } catch (err) {
-      console.error("🚨 Error fetching request ID:", err);
       throw err;
     }
   };
@@ -122,8 +126,24 @@ const VendorDetails = () => {
     }
 
     try {
+      // Check if vendor is already in the cart
+      const cartCheckRes = await fetch(`${API_URL}/api/cart/${couple_id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      });
+      const cartCheckData = await cartCheckRes.json();
+      const alreadyInCart = cartCheckData.data?.some(
+        (item) => item.vendor_id._id === vendor._id
+      );
+
+      if (alreadyInCart) {
+        setCartMessage("Vendor is already in your cart! 🛒");
+        return;
+      }
+
       const request_id = await fetchRequestId(couple_id, vendor._id, API_URL);
-      console.log("✅ Fetched request_id (from helper):", request_id);
 
       const requestBody = {
         couple_id,
@@ -132,8 +152,6 @@ const VendorDetails = () => {
         price: vendor.pricing,
         request_id,
       };
-
-      console.log("🛒 Add to Cart Request Body:", requestBody);
 
       const response = await fetch(`${API_URL}/api/cart/add`, {
         method: "POST",
@@ -145,19 +163,16 @@ const VendorDetails = () => {
       });
 
       const data = await response.json();
-      console.log("📥 Add to Cart API response:", data);
-
       if (data.status === "success") {
         const updatedCart = [...cart, data.data];
         setCart(updatedCart);
         localStorage.setItem("cart", JSON.stringify(updatedCart));
 
-        setCartMessage(`Item added successfully! 🛒 Request ID: ${data.request_id}`);
+        setCartMessage("Item added to cart successfully! 🛒");
       } else {
         throw new Error(data.message || "Failed to add item to cart.");
       }
     } catch (err) {
-      console.error("🚨 Add to Cart Error:", err);
       setCartMessage(err.message);
     }
   };
@@ -165,34 +180,27 @@ const VendorDetails = () => {
   if (loading) return <p className="text-center text-gray-500 pt-28">Loading vendor details...</p>;
   if (error) return <p className="text-center text-red-500 pt-28">{error}</p>;
 
+  const isVendorAlreadyInCart = cart.some((item) => item.vendor_id._id === vendor?._id);
+
   return (
     <div className="relative">
       <header className="bg-orange-300 h-24 p-6 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
         <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-20 w-auto" />
         <div className="flex gap-10 text-2xl">
-          <button onClick={() => navigate("/couple-home")} className="text-lg">
-            <img src="/Home.png" alt="home" className="h-5 w-auto" />
-          </button>
+          <button onClick={() => navigate("/couple-home")}><img src="/Home.png" alt="home" className="h-5 w-auto" /></button>
           <button onClick={() => navigate("/Cart")} className="text-3xl">🛒</button>
           <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">👤</button>
         </div>
       </header>
 
-      <div
-        className="min-h-screen flex items-center justify-center bg-pink-100 p-8 pt-36"
-        style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundPosition: "center" }}
-      >
+      <div className="min-h-screen flex items-center justify-center bg-pink-100 p-8 pt-36" style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
         <div className="max-w-5xl w-full bg-white p-10 rounded-lg shadow-md">
           {vendor && (
             <>
               <h1 className="text-3xl font-bold text-center">{vendor.businessName}</h1>
 
               <div className="flex flex-col md:flex-row items-center md:items-start mt-6">
-                <img
-                  src={vendor.profile_image || "/placeholder.jpg"}
-                  alt={vendor.businessName}
-                  className="w-56 h-56 object-cover rounded-lg shadow-md"
-                />
+                <img src={vendor.profile_image || "/placeholder.jpg"} alt={vendor.businessName} className="w-56 h-56 object-cover rounded-lg shadow-md" />
 
                 <div className="md:ml-8 mt-4 md:mt-0 text-center md:text-left flex-1">
                   <p className="text-gray-600"><strong>Type:</strong> {vendor.vendorType}</p>
@@ -221,10 +229,15 @@ const VendorDetails = () => {
                   )}
 
                   <button
-                    className="mt-6 ml-4 px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition"
+                    className={`mt-6 ml-4 px-6 py-3 ${
+                      isVendorAlreadyInCart
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-blue-500 hover:bg-blue-600"
+                    } text-white rounded-lg shadow-md transition`}
                     onClick={handleAddToCart}
+                    disabled={isVendorAlreadyInCart}
                   >
-                    Add to Cart 🛒
+                    {isVendorAlreadyInCart ? "Already in Cart" : "Add to Cart 🛒"}
                   </button>
 
                   {cartMessage && (
@@ -234,22 +247,6 @@ const VendorDetails = () => {
                   )}
                 </div>
               </div>
-
-              {vendor.service_images && vendor.service_images.length > 0 && (
-                <div className="mt-6">
-                  <h2 className="text-xl font-semibold text-center">Service Images</h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
-                    {vendor.service_images.map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt={`Service ${index + 1}`}
-                        className="w-full h-40 object-cover rounded-md shadow transition-transform hover:scale-105"
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
             </>
           )}
         </div>
