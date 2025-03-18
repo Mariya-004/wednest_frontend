@@ -108,7 +108,7 @@ const Cart = () => {
                   <div
                     key={item.vendor_id._id}
                     className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-sm cursor-pointer hover:bg-gray-200 transition"
-                    onClick={() => navigate(`/vendor-details/${item.vendor_id._id}`)}
+                    onClick={() => navigate(`/vendor/${item.vendor_id._id}`)}
                   >
                     <div className="flex items-center gap-4">
                       <img
