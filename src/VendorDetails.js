@@ -79,7 +79,7 @@ const VendorDetails = () => {
   };
 
   const handleAddToCart = async () => {
-    setCartMessage(null); // Reset previous messages
+    setCartMessage(null);
     const couple_id = localStorage.getItem("user_id");
   
     if (!couple_id) {
@@ -92,17 +92,28 @@ const VendorDetails = () => {
       return;
     }
   
-    const requestBody = {
-      couple_id,
-      vendor_id: vendor._id,
-      service_type: vendor.vendorType,
-      price: vendor.pricing,
-      request_id: `req-${Date.now()}` // Generate a unique request ID
-    };
-  
-    console.log("🛒 Add to Cart Request Body:", requestBody);
-  
     try {
+      // Fetch the request_id from backend
+      const reqIdRes = await fetch(`${API_URL}/api/request-id?couple_id=${couple_id}&vendor_id=${vendor._id}`);
+      const reqIdData = await reqIdRes.json();
+  
+      if (reqIdData.status !== "success") {
+        throw new Error("Request ID not found. Please send a request first.");
+      }
+  
+      const request_id = reqIdData.request_id;
+      console.log("Fetched request_id:", request_id);
+  
+      const requestBody = {
+        couple_id,
+        vendor_id: vendor._id,
+        service_type: vendor.vendorType,
+        price: vendor.pricing,
+        request_id,
+      };
+  
+      console.log("🛒 Add to Cart Request Body:", requestBody);
+  
       const response = await fetch(`${API_URL}/api/cart/add`, {
         method: "POST",
         headers: {
@@ -114,13 +125,11 @@ const VendorDetails = () => {
   
       const data = await response.json();
   
-      console.log("🛒 Add to Cart Response:", data);
-  
       if (data.status === "success") {
-        setCart([...cart, data.data]); 
+        setCart([...cart, data.data]);
         localStorage.setItem("cart", JSON.stringify([...cart, data.data]));
   
-        setCartMessage(`Item added successfully! 🛒 Request ID: ${data.request_id}`); // ✅ Show request_id
+        setCartMessage(`Item added successfully! 🛒 Request ID: ${data.request_id}`);
       } else {
         throw new Error(data.message || "Failed to add item to cart.");
       }
@@ -129,6 +138,7 @@ const VendorDetails = () => {
       setCartMessage(err.message);
     }
   };
+  
   
   
   
