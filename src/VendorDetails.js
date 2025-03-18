@@ -12,7 +12,7 @@ const VendorDetails = () => {
   const [requestStatus, setRequestStatus] = useState(null);
   const [isRequested, setIsRequested] = useState(false);
   const [cart, setCart] = useState([]);
-  const [cartMessage, setCartMessage] = useState(null); // New state for cart message
+  const [cartMessage, setCartMessage] = useState(null);
 
   useEffect(() => {
     const couple_id = localStorage.getItem("user_id");
@@ -24,10 +24,10 @@ const VendorDetails = () => {
         const vendorData = await vendorRes.json();
         if (vendorData.status !== "success") throw new Error("Failed to load vendor details.");
         setVendor(vendorData.data);
-       
+
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
         setCart(storedCart);
-        // check if already requested
+
         if (couple_id) {
           const requestRes = await fetch(`${API_URL}/api/couple/requests/${couple_id}`);
           if (!requestRes.ok) throw new Error(`HTTP error! Status: ${requestRes.status}`);
@@ -78,32 +78,53 @@ const VendorDetails = () => {
     }
   };
 
+  const fetchRequestId = async (couple_id, vendor_id, API_URL) => {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/request-id?couple_id=${couple_id}&vendor_id=${vendor_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("🌐 Full response from /api/request-id:", data);
+
+      if (response.ok && data.status === "success") {
+        console.log("✅ Request ID fetched:", data.request_id);
+        return data.request_id;
+      } else {
+        throw new Error(data.message || "Request ID not found.");
+      }
+    } catch (err) {
+      console.error("🚨 Error fetching request ID:", err);
+      throw err;
+    }
+  };
+
   const handleAddToCart = async () => {
     setCartMessage(null);
     const couple_id = localStorage.getItem("user_id");
-  
+
     if (!couple_id) {
       setCartMessage("You must be logged in to add items to your cart.");
       return;
     }
-  
+
     if (!vendor) {
       setCartMessage("Vendor details are missing.");
       return;
     }
-  
+
     try {
-      // Fetch the request_id from backend
-      const reqIdRes = await fetch(`${API_URL}/api/request-id?couple_id=${couple_id}&vendor_id=${vendor._id}`);
-      const reqIdData = await reqIdRes.json();
-  
-      if (reqIdData.status !== "success") {
-        throw new Error("Request ID not found. Please send a request first.");
-      }
-  
-      const request_id = reqIdData.request_id;
-      console.log("Fetched request_id:", request_id);
-  
+      const request_id = await fetchRequestId(couple_id, vendor._id, API_URL);
+      console.log("✅ Fetched request_id (from helper):", request_id);
+
       const requestBody = {
         couple_id,
         vendor_id: vendor._id,
@@ -111,9 +132,9 @@ const VendorDetails = () => {
         price: vendor.pricing,
         request_id,
       };
-  
+
       console.log("🛒 Add to Cart Request Body:", requestBody);
-  
+
       const response = await fetch(`${API_URL}/api/cart/add`, {
         method: "POST",
         headers: {
@@ -122,13 +143,15 @@ const VendorDetails = () => {
         },
         body: JSON.stringify(requestBody),
       });
-  
+
       const data = await response.json();
-  
+      console.log("📥 Add to Cart API response:", data);
+
       if (data.status === "success") {
-        setCart([...cart, data.data]);
-        localStorage.setItem("cart", JSON.stringify([...cart, data.data]));
-  
+        const updatedCart = [...cart, data.data];
+        setCart(updatedCart);
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+
         setCartMessage(`Item added successfully! 🛒 Request ID: ${data.request_id}`);
       } else {
         throw new Error(data.message || "Failed to add item to cart.");
@@ -138,31 +161,23 @@ const VendorDetails = () => {
       setCartMessage(err.message);
     }
   };
-  
-  
-  
-  
 
   if (loading) return <p className="text-center text-gray-500 pt-28">Loading vendor details...</p>;
   if (error) return <p className="text-center text-red-500 pt-28">{error}</p>;
 
   return (
     <div className="relative">
-      {/* Header */}
       <header className="bg-orange-300 h-24 p-6 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
         <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-20 w-auto" />
         <div className="flex gap-10 text-2xl">
           <button onClick={() => navigate("/couple-home")} className="text-lg">
             <img src="/Home.png" alt="home" className="h-5 w-auto" />
           </button>
-          <button  onClick={() => navigate("/Cart")} className="text-3xl">🛒</button>
-          <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">
-            👤
-          </button>
+          <button onClick={() => navigate("/Cart")} className="text-3xl">🛒</button>
+          <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">👤</button>
         </div>
       </header>
 
-      {/* Vendor Details - Added padding to prevent overlap */}
       <div
         className="min-h-screen flex items-center justify-center bg-pink-100 p-8 pt-36"
         style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundPosition: "center" }}
@@ -180,32 +195,19 @@ const VendorDetails = () => {
                 />
 
                 <div className="md:ml-8 mt-4 md:mt-0 text-center md:text-left flex-1">
-                  <p className="text-gray-600">
-                    <strong>Type:</strong> {vendor.vendorType}
-                  </p>
-                  <p className="text-gray-600">
-                    <strong>Location:</strong> {vendor.location}
-                  </p>
-                  <p className="text-green-600 font-bold">
-                    <strong>Pricing:</strong> ${vendor.pricing}
-                  </p>
+                  <p className="text-gray-600"><strong>Type:</strong> {vendor.vendorType}</p>
+                  <p className="text-gray-600"><strong>Location:</strong> {vendor.location}</p>
+                  <p className="text-green-600 font-bold"><strong>Pricing:</strong> ${vendor.pricing}</p>
                   <p className="text-gray-700 mt-2">{vendor.serviceDescription}</p>
 
                   <div className="mt-4">
                     <h2 className="text-lg font-semibold">Contact Information</h2>
-                    <p className="text-gray-600">
-                      <strong>Email:</strong> {vendor.email}
-                    </p>
-                    <p className="text-gray-600">
-                      <strong>Phone:</strong> {vendor.contactNumber}
-                    </p>
+                    <p className="text-gray-600"><strong>Email:</strong> {vendor.email}</p>
+                    <p className="text-gray-600"><strong>Phone:</strong> {vendor.contactNumber}</p>
                   </div>
 
-                  {/* Request Button */}
                   <button
-                    className={`mt-6 px-6 py-3 rounded-lg shadow-md transition ${
-                      isRequested ? "bg-yellow-500 text-black" : "bg-pink-500 text-white hover:bg-pink-600"
-                    }`}
+                    className={`mt-6 px-6 py-3 rounded-lg shadow-md transition ${isRequested ? "bg-yellow-500 text-black" : "bg-pink-500 text-white hover:bg-pink-600"}`}
                     onClick={handleRequest}
                     disabled={isRequested}
                   >
@@ -213,15 +215,11 @@ const VendorDetails = () => {
                   </button>
 
                   {requestStatus && (
-                    <p
-                      className={`mt-4 text-center font-semibold ${
-                        requestStatus.type === "success" ? "text-green-600" : "text-red-600"
-                      }`}
-                    >
+                    <p className={`mt-4 text-center font-semibold ${requestStatus.type === "success" ? "text-green-600" : "text-red-600"}`}>
                       {requestStatus.message}
                     </p>
                   )}
-                  {/* Add to Cart Button */}
+
                   <button
                     className="mt-6 ml-4 px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition"
                     onClick={handleAddToCart}
