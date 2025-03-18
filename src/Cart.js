@@ -13,7 +13,7 @@ const Cart = () => {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCartWithVendorDetails = async () => {
       try {
         const [cartRes, budgetRes] = await Promise.all([
           fetch(`${API_URL}/api/cart/${couple_id}`, {
@@ -27,8 +27,35 @@ const Cart = () => {
         const cartData = await cartRes.json();
         const budgetData = await budgetRes.json();
 
-        if (cartData.status === "success") setCartItems(cartData.data || []);
-        if (budgetData.status === "success") setBudget(budgetData.data);
+        if (budgetData.status === "success") {
+          setBudget(budgetData.data);
+        }
+
+        if (cartData.status === "success" && cartData.data.length > 0) {
+          // Fetch vendor details for each cart item
+          const updatedCart = await Promise.all(
+            cartData.data.map(async (item) => {
+              try {
+                const vendorRes = await fetch(
+                  `${API_URL}/api/vendor/details/${item.vendor_id._id}`,
+                  {
+                    headers: { Authorization: `Bearer ${authToken}` },
+                  }
+                );
+                const vendorData = await vendorRes.json();
+
+                if (vendorData.status === "success") {
+                  return { ...item, vendor_id: vendorData.data }; // overwrite with full vendor data
+                }
+              } catch (error) {
+                console.error("Error fetching vendor details: ", error);
+              }
+              return item; // fallback if error occurs
+            })
+          );
+
+          setCartItems(updatedCart);
+        }
       } catch (err) {
         console.error("Error fetching cart or budget:", err);
       } finally {
@@ -36,7 +63,7 @@ const Cart = () => {
       }
     };
 
-    fetchData();
+    fetchCartWithVendorDetails();
   }, [API_URL, couple_id, authToken]);
 
   const handleRemoveItem = async (vendor_id) => {
@@ -132,7 +159,7 @@ const Cart = () => {
                     </div>
                     <button
                       onClick={(e) => {
-                        e.stopPropagation(); // prevent navigation on remove click
+                        e.stopPropagation();
                         handleRemoveItem(item.vendor_id._id);
                       }}
                       className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow"
