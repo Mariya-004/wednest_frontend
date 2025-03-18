@@ -17,28 +17,43 @@ const Cart = () => {
   const fetchCartAndBudget = async () => {
     setLoading(true);
     try {
+      if (!coupleId) {
+        console.error("No couple_id found in localStorage");
+        setLoading(false);
+        return;
+      }
+  
+      // Fetch cart data
       const cartRes = await fetch(`/api/cart/${coupleId}`);
       const cartData = await cartRes.json();
-
       console.log("Fetched cart data:", cartData);
-
-      const budgetRes = await fetch(`/api/couple/budget/${coupleId}`);
-      const budgetData = await budgetRes.json();
-
+  
       if (cartData.status === "success" && Array.isArray(cartData.data)) {
         setCartItems(cartData.data);
       } else {
+        console.warn("No cart items found or error:", cartData.message);
         setCartItems([]);
       }
-
+  
+      // Fetch budget data
+      const budgetRes = await fetch(`/api/couple/budget/${coupleId}`);
+      const budgetData = await budgetRes.json();
+      console.log("Fetched budget data:", budgetData);
+  
       if (budgetData.status === "success") {
         setBudget(budgetData.data);
+      } else {
+        console.warn("Could not fetch budget:", budgetData.message);
+        setBudget(0);
       }
+  
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching cart or budget:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
+  
 
   const handleRemove = async (vendorId, status) => {
     if (status === "Confirmed by Vendor") {
