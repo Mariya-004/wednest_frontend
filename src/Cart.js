@@ -73,9 +73,15 @@ const Cart = () => {
       <header className="bg-orange-300 h-24 p-6 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
         <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-20 w-auto" />
         <div className="flex gap-10 text-2xl">
-          <button type="button" onClick={() => navigate("/couple-home")}>🏠</button>
-          <button type="button" onClick={() => navigate("/Cart")} className="text-3xl">🛒</button>
-          <button type="button" onClick={() => navigate("/couple-dashboard")} className="text-3xl">👤</button>
+          <button type="button" onClick={() => navigate("/couple-home")}>
+            <img src="/Home.png" alt="home" className="h-5 w-auto" />
+          </button>
+          <button type="button" onClick={() => navigate("/Cart")} className="text-3xl">
+            🛒
+          </button>
+          <button type="button" onClick={() => navigate("/couple-dashboard")} className="text-3xl">
+            👤
+          </button>
         </div>
       </header>
 
@@ -99,12 +105,16 @@ const Cart = () => {
             <>
               <div className="grid gap-4">
                 {cartItems.map((item) => (
-                  <div key={item.vendor_id._id} className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-sm">
-                    <div className="flex items-center">
+                  <div
+                    key={item.vendor_id._id}
+                    className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-sm cursor-pointer hover:bg-gray-200 transition"
+                    onClick={() => navigate(`/vendor-details/${item.vendor_id._id}`)}
+                  >
+                    <div className="flex items-center gap-4">
                       <img
                         src={item.vendor_id.profile_image || "/placeholder.jpg"}
                         alt={item.vendor_id.businessName}
-                        className="w-24 h-24 object-cover rounded-md mr-6"
+                        className="w-16 h-16 object-cover rounded-full shadow"
                       />
                       <div>
                         <p className="text-lg font-semibold">{item.vendor_id.businessName}</p>
@@ -114,7 +124,10 @@ const Cart = () => {
                       </div>
                     </div>
                     <button
-                      onClick={() => handleRemoveItem(item.vendor_id._id)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // prevent navigation on remove click
+                        handleRemoveItem(item.vendor_id._id);
+                      }}
                       className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow"
                       disabled={item.status === "Confirmed by Vendor"}
                     >
