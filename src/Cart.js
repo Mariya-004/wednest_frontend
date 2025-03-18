@@ -85,7 +85,10 @@ const Cart = () => {
         </div>
       </header>
 
-      <div className="min-h-screen bg-pink-100 pt-36 pb-10 px-4 sm:px-8" style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover" }}>
+      <div
+        className="min-h-screen bg-pink-100 pt-36 pb-10 px-4 sm:px-8"
+        style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover" }}
+      >
         <div className="max-w-5xl mx-auto bg-white p-8 rounded-lg shadow-md">
           <h1 className="text-3xl font-bold text-center mb-6">Your Cart 🛒</h1>
 
@@ -112,7 +115,11 @@ const Cart = () => {
                   >
                     <div className="flex items-center gap-4">
                       <img
-                        src={item.vendor_id.profile_image || "/placeholder.jpg"}
+                        src={
+                          item.vendor_id.profile_image
+                            ? `${API_URL}/${item.vendor_id.profile_image}`
+                            : "/placeholder.jpg"
+                        }
                         alt={item.vendor_id.businessName}
                         className="w-16 h-16 object-cover rounded-full shadow"
                       />
