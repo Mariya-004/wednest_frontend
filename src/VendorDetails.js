@@ -92,7 +92,6 @@ const VendorDetails = () => {
       return;
     }
   
-    // Prepare request payload
     const requestBody = {
       couple_id,
       vendor_id: vendor._id,
@@ -101,7 +100,6 @@ const VendorDetails = () => {
       request_id: `req-${Date.now()}` // Generate a unique request ID
     };
   
-    // Log the request payload
     console.log("🛒 Add to Cart Request Body:", requestBody);
   
     try {
@@ -119,9 +117,10 @@ const VendorDetails = () => {
       console.log("🛒 Add to Cart Response:", data);
   
       if (data.status === "success") {
-        setCart([...cart, data.data]); // Update cart state
-        localStorage.setItem("cart", JSON.stringify([...cart, data.data])); // Store cart in localStorage
-        setCartMessage("Item added to cart successfully! 🛒");
+        setCart([...cart, data.data]); 
+        localStorage.setItem("cart", JSON.stringify([...cart, data.data]));
+  
+        setCartMessage(`Item added successfully! 🛒 Request ID: ${data.request_id}`); // ✅ Show request_id
       } else {
         throw new Error(data.message || "Failed to add item to cart.");
       }
@@ -130,6 +129,7 @@ const VendorDetails = () => {
       setCartMessage(err.message);
     }
   };
+  
   
   
 
