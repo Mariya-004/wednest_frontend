@@ -20,11 +20,15 @@ const Cart = () => {
       const cartRes = await fetch(`/api/cart/${coupleId}`);
       const cartData = await cartRes.json();
 
+      console.log("Fetched cart data:", cartData);
+
       const budgetRes = await fetch(`/api/couple/budget/${coupleId}`);
       const budgetData = await budgetRes.json();
 
-      if (cartData.status === "success") {
+      if (cartData.status === "success" && Array.isArray(cartData.data)) {
         setCartItems(cartData.data);
+      } else {
+        setCartItems([]);
       }
 
       if (budgetData.status === "success") {
@@ -71,7 +75,6 @@ const Cart = () => {
       className="min-h-screen bg-pink-100 p-6"
       style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundAttachment: "fixed" }}
     >
-      {/* Header */}
       <header className="bg-white/70 backdrop-blur-lg h-20 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-xl rounded-b-xl">
         <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-16 w-auto" />
         <div className="flex gap-8 text-lg font-semibold">
@@ -115,15 +118,15 @@ const Cart = () => {
             >
               <img
                 src={item.image || "/placeholder.jpg"}
-                alt={item.vendor_id.businessName}
+                alt={item.vendor_id?.businessName || "Vendor"}
                 className="w-32 h-32 object-cover rounded-xl border-2 border-purple-300"
               />
               <div className="flex-1">
-                <h2 className="text-2xl font-bold text-purple-800">{item.vendor_id.businessName}</h2>
-                <p className="text-gray-600">Type: {item.vendor_id.vendorType}</p>
-                <p className="text-gray-700">City: {item.location}</p>
-                <p className="text-gray-700 font-semibold">Price: {item.price?.toLocaleString()} Rs</p>
-                <p className="text-gray-500 mt-1">{item.details}</p>
+                <h2 className="text-2xl font-bold text-purple-800">{item.vendor_id?.businessName || "Unknown Vendor"}</h2>
+                <p className="text-gray-600">Type: {item.vendor_id?.vendorType || "N/A"}</p>
+                <p className="text-gray-700">City: {item.location || "N/A"}</p>
+                <p className="text-gray-700 font-semibold">Price: {item.price?.toLocaleString() || 0} Rs</p>
+                <p className="text-gray-500 mt-1">{item.details || "No additional details."}</p>
               </div>
               <div className="text-center">
                 <span
@@ -134,8 +137,9 @@ const Cart = () => {
                   {item.status}
                 </span>
                 <button
-                  onClick={() => handleRemove(item.vendor_id._id, item.status)}
+                  onClick={() => handleRemove(item.vendor_id?._id, item.status)}
                   className="mt-3 w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-md"
+                  disabled={!item.vendor_id?._id}
                 >
                   {item.status === "Confirmed by Vendor" ? "Locked" : "Remove Request"}
                 </button>
