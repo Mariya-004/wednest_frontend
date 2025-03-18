@@ -12,7 +12,6 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
 
-  // Fetch cart and couple budget
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -74,15 +73,9 @@ const Cart = () => {
       <header className="bg-orange-300 h-24 p-6 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
         <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-20 w-auto" />
         <div className="flex gap-10 text-2xl">
-          <button type="button" onClick={() => navigate("/couple-home")}>
-            <img src="/Home.png" alt="home" className="h-5 w-auto" />
-          </button>
-          <button type="button" onClick={() => navigate("/Cart")} className="text-3xl">
-            🛒
-          </button>
-          <button type="button" onClick={() => navigate("/couple-dashboard")} className="text-3xl">
-            👤
-          </button>
+          <button type="button" onClick={() => navigate("/couple-home")}>🏠</button>
+          <button type="button" onClick={() => navigate("/Cart")} className="text-3xl">🛒</button>
+          <button type="button" onClick={() => navigate("/couple-dashboard")} className="text-3xl">👤</button>
         </div>
       </header>
 
@@ -107,11 +100,18 @@ const Cart = () => {
               <div className="grid gap-4">
                 {cartItems.map((item) => (
                   <div key={item.vendor_id._id} className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-sm">
-                    <div>
-                      <p className="text-lg font-semibold">{item.vendor_id.businessName}</p>
-                      <p className="text-gray-600">{item.vendor_id.vendorType}</p>
-                      <p className="text-green-600 font-bold">${item.price}</p>
-                      <p className="text-sm text-gray-500 mt-1">Status: {item.status}</p>
+                    <div className="flex items-center">
+                      <img
+                        src={item.vendor_id.profile_image || "/placeholder.jpg"}
+                        alt={item.vendor_id.businessName}
+                        className="w-24 h-24 object-cover rounded-md mr-6"
+                      />
+                      <div>
+                        <p className="text-lg font-semibold">{item.vendor_id.businessName}</p>
+                        <p className="text-gray-600">{item.vendor_id.vendorType}</p>
+                        <p className="text-green-600 font-bold">${item.price}</p>
+                        <p className="text-sm text-gray-500 mt-1">Status: {item.status}</p>
+                      </div>
                     </div>
                     <button
                       onClick={() => handleRemoveItem(item.vendor_id._id)}
