@@ -145,7 +145,7 @@ const Cart = () => {
                       <img
                         src={
                           item.vendor_id.services && item.vendor_id.services.length > 0
-                            ? `${API_URL}/${item.vendor_id.services[0].image}`
+                            ? `${API_URL}/${item.vendor_id.service_images[0]}`
                             : "/placeholder.jpg"
                         }
                         alt={item.vendor_id.businessName}
