@@ -24,7 +24,7 @@ const Events = () => {
           <button onClick={() => navigate("/couple-home")} className="text-lg">
             <img src="/Home.png" alt="home" className="h-5 w-auto" />
           </button>
-          <span className="text-3xl">🛒</span>
+          <button onClick={() => navigate("/Cart")}className="text-3xl">🛒</button>
           <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">
             👤
           </button>

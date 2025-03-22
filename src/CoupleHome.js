@@ -24,7 +24,7 @@ export default function CoupleHome() {
         <img src="WEDNEST_LOGO.png" alt="WedNest Logo" className="h-24 w-auto" />
         <div className="flex gap-10 text-2xl">
           <button onClick={() => navigate("/couple-home")} className="text-lg"><img src="/Home.png" alt="home" className="h-5 w-auto" /></button>
-          <span className="text-3xl">🛒</span>
+          <button onClick={() => navigate("/Cart")} className="text-3xl">🛒</button>
           <button onClick={() => navigate("/couple-dashboard")}className="text-3xl">👤</button>
         </div>
       </header>
