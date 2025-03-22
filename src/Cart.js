@@ -38,7 +38,6 @@ const Cart = () => {
               try {
                 const vendorRes = await fetch(
                   `${API_URL}/api/vendor/details/${item.vendor_id._id}`, 
-                  console.log("vendorID", item.vendor_id._id),
                   {
                     headers: { Authorization: `Bearer ${authToken}` },
                   }
@@ -46,6 +45,7 @@ const Cart = () => {
                 const vendorData = await vendorRes.json();
 
                 if (vendorData.status === "success") {
+                  console.log("Vendor Details:", vendorData.data);
                   return { ...item, vendor_id: vendorData.data }; // overwrite with full vendor data
                 }
               } catch (error) {
