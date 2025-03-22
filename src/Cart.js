@@ -37,7 +37,8 @@ const Cart = () => {
             cartData.data.map(async (item) => {
               try {
                 const vendorRes = await fetch(
-                  `${API_URL}/api/vendor/details/${item.vendor_id._id}`,
+                  `${API_URL}/api/vendor/details/${item.vendor_id._id}`, 
+                  console.log("vendorID", item.vendor_id._id),
                   {
                     headers: { Authorization: `Bearer ${authToken}` },
                   }
