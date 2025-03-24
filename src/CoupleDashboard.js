@@ -117,35 +117,35 @@ export default function CoupleDashboard() {
         {/* Main Content */}
         <div className="pl-[22%] pt-[120px] pr-6">
           <div className="grid grid-cols-3 gap-6 p-6">
-            {/* Budget and Welcome Back Section */}
+            {/* Budget and Welcome Back Section with gradient cards */}
             <div className="col-span-2 grid grid-cols-2 gap-6">
               {/* Budget Card */}
               <div
-                className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
+                className="p-6 rounded-2xl text-black shadow-md flex flex-col items-center justify-center"
                 style={{
-                  backgroundImage: "url('/bgcouple.jpg')",
+                  background: "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
                   height: "300px",
                   width: "100%",
                 }}
               >
-                <h2 className="text-xl font-semibold">Budget</h2>
+                <h2 className="text-2xl font-bold mb-4">Budget</h2>
                 {dashboardData?.budget != null ? (
-                  <p className="text-lg">Budget Set: ${dashboardData.budget}</p>
+                  <p className="text-xl">Budget Set: ${dashboardData.budget}</p>
                 ) : (
-                  <p className="text-lg">Loading...</p>
+                  <p className="text-xl">Loading...</p>
                 )}
               </div>
 
               {/* Welcome Back Card */}
               <div
-                className="p-6 rounded-lg text-center text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
+                className="p-6 rounded-2xl text-center text-black shadow-md flex flex-col items-center justify-center"
                 style={{
-                  backgroundImage: "url('/bgcouple.jpg')",
+                  background: "linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)",
                   height: "300px",
                   width: "100%",
                 }}
               >
-                <h2 className="text-xl font-semibold">
+                <h2 className="text-2xl font-bold mb-4">
                   Welcome Back, {dashboardData?.username || "User"}!
                 </h2>
                 <p className="text-lg">
@@ -161,21 +161,21 @@ export default function CoupleDashboard() {
               </div>
             </div>
 
-            {/* Vendors Booked Section with status */}
+            {/* Vendors Booked with elegant gradient */}
             <div
-              className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
+              className="p-6 rounded-2xl text-black shadow-md flex flex-col items-center"
               style={{
-                backgroundImage: "url('/bgcouple.jpg')",
+                background: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
                 height: "500px",
                 width: "100%",
                 overflowY: "auto",
               }}
             >
-              <h2 className="text-xl text-center font-semibold">Vendors Booked</h2>
+              <h2 className="text-2xl text-center font-bold mb-4">Vendors Booked</h2>
               {vendorRequests.length > 0 ? (
                 <ul className="text-center w-full">
                   {vendorRequests.map((request, index) => (
-                    <li key={index} className="text-lg py-1 border-b border-gray-300">
+                    <li key={index} className="text-lg py-2 border-b border-gray-300">
                       <strong>{request.vendor_id.businessName}</strong> <br />
                       Service: {request.vendor_id.vendorType} <br />
                       Status: <span className="text-blue-700">{request.status}</span>
