@@ -82,7 +82,7 @@ export default function CoupleDashboard() {
         <div
           className="fixed left-0 top-[100px] w-1/5 h-[calc(100vh-100px)] flex flex-col items-center justify-center space-y-6 px-4 shadow-lg"
           style={{
-            backgroundImage: "url('/sidebar.png')",
+            backgroundImage: "url('/sidebar.jpeg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundColor: "rgba(255, 255, 255, 0.3)",
@@ -116,7 +116,7 @@ export default function CoupleDashboard() {
 
         {/* Main Content */}
         <div className="pl-[22%] pt-[120px] pr-6">
-          <div className="grid grid-cols-3 gap-6 p-6 items-start">
+          <div className="grid grid-cols-3 gap-6 p-6">
             {/* Budget and Welcome Back Section */}
             <div className="col-span-2 grid grid-cols-2 gap-6">
               {/* Budget Card */}
@@ -161,23 +161,21 @@ export default function CoupleDashboard() {
               </div>
             </div>
 
-            {/* Adaptive Vendors Booked Section */}
+            {/* Vendors Booked Section with status */}
             <div
-              className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-start shadow-md"
+              className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
               style={{
                 backgroundImage: "url('/bgcouple.jpg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
+                height: "500px",
                 width: "100%",
-                maxHeight: "500px",
-                overflowY: vendorRequests.length > 4 ? "auto" : "visible", // Enable scroll only if items overflow
+                overflowY: "auto",
               }}
             >
-              <h2 className="text-xl text-center font-semibold mb-4">Vendors Booked</h2>
+              <h2 className="text-xl text-center font-semibold">Vendors Booked</h2>
               {vendorRequests.length > 0 ? (
                 <ul className="text-center w-full">
                   {vendorRequests.map((request, index) => (
-                    <li key={index} className="text-lg py-2 border-b border-gray-300">
+                    <li key={index} className="text-lg py-1 border-b border-gray-300">
                       <strong>{request.vendor_id.businessName}</strong> <br />
                       Service: {request.vendor_id.vendorType} <br />
                       Status: <span className="text-blue-700">{request.status}</span>
