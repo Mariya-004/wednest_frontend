@@ -46,11 +46,7 @@ const Login = () => {
         localStorage.setItem("user_id", data.data?.user_id || "");
         localStorage.setItem("user_type", data.data?.user_type || "");
   
-        if (data.data?.user_type === "Couple") {
-          localStorage.setItem("couple_id", data.data?.couple_id || "");
-        } else if (data.data?.user_type === "Vendor") {
-          localStorage.setItem("vendor_id", data.data?.vendor_id || "");
-        }
+  
   
         // ✅ Redirect immediately
         navigate(data.data.user_type === "Vendor" ? "/vendor-dashboard" : "/couple-dashboard");
