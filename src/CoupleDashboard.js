@@ -64,10 +64,10 @@ export default function CoupleDashboard() {
   };
 
   return (
-    <div className="fixed inset-0 w-full h-full bg-blue-100 overflow-hidden">
+    <div className="fixed inset-0 w-full h-full bg-blue-50 overflow-hidden">
       <div className="h-full overflow-y-auto">
         {/* Header */}
-        <header className="bg-orange-300 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
+        <header className="bg-rose-200 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
           <img src="WEDNEST_LOGO.png" alt="WedNest Logo" className="h-24 w-auto" />
           <div className="flex gap-6">
             <button onClick={() => navigate("/couple-home")} className="text-lg">
@@ -85,12 +85,12 @@ export default function CoupleDashboard() {
             backgroundImage: "url('/sidebar.jpeg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
             backgroundBlendMode: "overlay",
           }}
         >
-          <h2 className="text-lg font-semibold text-black">Welcome</h2>
-          <div className="w-32 h-32 bg-gray-400 rounded-full">
+          <h2 className="text-lg font-semibold text-gray-800">Welcome</h2>
+          <div className="w-32 h-32 bg-gray-300 rounded-full overflow-hidden">
             {dashboardData?.profile_image ? (
               <img
                 src={
@@ -99,17 +99,17 @@ export default function CoupleDashboard() {
                     : `${API_URL}${dashboardData.profile_image}`
                 }
                 alt="Profile"
-                className="w-full h-full rounded-full object-cover"
+                className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gray-300 rounded-full">
+              <div className="w-full h-full flex items-center justify-center">
                 No Image
               </div>
             )}
           </div>
-          <p className="font-semibold text-black text-center">@{dashboardData?.username || "Username"}</p>
-          <p className="text-black text-center">{dashboardData?.email || "user@example.com"}</p>
-          <button onClick={handleEditProfile} className="bg-blue-500 text-white px-6 py-2 rounded">
+          <p className="font-semibold text-gray-800 text-center">@{dashboardData?.username || "Username"}</p>
+          <p className="text-gray-800 text-center">{dashboardData?.email || "user@example.com"}</p>
+          <button onClick={handleEditProfile} className="bg-rose-400 text-white px-6 py-2 rounded shadow">
             Edit Profile
           </button>
         </div>
@@ -117,13 +117,13 @@ export default function CoupleDashboard() {
         {/* Main Content */}
         <div className="pl-[22%] pt-[120px] pr-6">
           <div className="grid grid-cols-3 gap-6 p-6">
-            {/* Budget and Welcome Back Section with gradient cards */}
+            {/* Budget and Welcome Back Section */}
             <div className="col-span-2 grid grid-cols-2 gap-6">
               {/* Budget Card */}
               <div
-                className="p-6 rounded-2xl text-black shadow-md flex flex-col items-center justify-center"
+                className="p-6 rounded-2xl text-gray-900 shadow-lg flex flex-col items-center justify-center"
                 style={{
-                  background: "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
+                  background: "linear-gradient(135deg, #fff1e6, #f8d7da)",
                   height: "300px",
                   width: "100%",
                 }}
@@ -138,9 +138,9 @@ export default function CoupleDashboard() {
 
               {/* Welcome Back Card */}
               <div
-                className="p-6 rounded-2xl text-center text-black shadow-md flex flex-col items-center justify-center"
+                className="p-6 rounded-2xl text-center text-gray-900 shadow-lg flex flex-col items-center justify-center"
                 style={{
-                  background: "linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)",
+                  background: "linear-gradient(135deg, #fefefe, #f7e7ce)",
                   height: "300px",
                   width: "100%",
                 }}
@@ -161,24 +161,24 @@ export default function CoupleDashboard() {
               </div>
             </div>
 
-            {/* Vendors Booked with elegant gradient */}
+            {/* Vendors Booked Section */}
             <div
-              className="p-6 rounded-2xl text-black shadow-md flex flex-col items-center"
+              className="p-6 rounded-2xl text-gray-900 shadow-lg flex flex-col items-center"
               style={{
-                background: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+                background: "linear-gradient(135deg, #fdeff9, #fbd5d3)",
                 height: "500px",
                 width: "100%",
                 overflowY: "auto",
               }}
             >
-              <h2 className="text-2xl text-center font-bold mb-4">Vendors Booked</h2>
+              <h2 className="text-2xl font-bold mb-4">Vendors Booked</h2>
               {vendorRequests.length > 0 ? (
                 <ul className="text-center w-full">
                   {vendorRequests.map((request, index) => (
                     <li key={index} className="text-lg py-2 border-b border-gray-300">
                       <strong>{request.vendor_id.businessName}</strong> <br />
                       Service: {request.vendor_id.vendorType} <br />
-                      Status: <span className="text-blue-700">{request.status}</span>
+                      Status: <span className="text-rose-600">{request.status}</span>
                     </li>
                   ))}
                 </ul>
@@ -192,7 +192,7 @@ export default function CoupleDashboard() {
           <div className="text-center mt-6">
             <button
               onClick={handleLogout}
-              className="bg-red-500 text-white px-6 py-2 rounded shadow-md"
+              className="bg-rose-500 text-white px-6 py-2 rounded shadow-lg"
             >
               Log Out
             </button>
