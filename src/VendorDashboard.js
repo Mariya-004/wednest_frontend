@@ -20,6 +20,7 @@ export default function VendorDashboard() {
 
     const fetchUserData = async () => {
       try {
+        console.log("Fetching vendor data for user_id:", user_id);
         const response = await fetch(
           `${API_URL}/api/vendor/dashboard/${user_id}`,
           {
@@ -27,6 +28,8 @@ export default function VendorDashboard() {
           }
         );
         const data = await response.json();
+
+        console.log("Vendor data response:", data);
 
         if (response.ok && data.status === "success") {
           setUserData(data.data);

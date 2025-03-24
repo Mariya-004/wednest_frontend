@@ -26,6 +26,7 @@ const Login = () => {
     setLoading(true);
   
     try {
+      console.log("Sending login request with:", { email, password, role });
       const response = await fetch(`${API_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -34,6 +35,8 @@ const Login = () => {
   
       const data = await response.json();
       setLoading(false);
+  
+      console.log("Login response:", data);
   
       if (response.ok && data.status === "success") {
         setMessage("Login successful! Redirecting...");
@@ -46,11 +49,6 @@ const Login = () => {
         localStorage.setItem("user_id", data.data?.user_id || "");
         localStorage.setItem("user_type", data.data?.user_type || "");
   
-        if (data.data?.user_type === "Couple") {
-          localStorage.setItem("couple_id", data.data?.couple_id || "");
-        } else if (data.data?.user_type === "Vendor") {
-          localStorage.setItem("vendor_id", data.data?.vendor_id || "");
-        }
   
         // ✅ Redirect immediately
         navigate(data.data.user_type === "Vendor" ? "/vendor-dashboard" : "/couple-dashboard");
