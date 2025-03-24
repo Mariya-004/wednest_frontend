@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 export default function CoupleDashboard() {
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
+  const [vendorRequests, setVendorRequests] = useState([]);
   const user_id = localStorage.getItem("user_id");
-  const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, ""); // Use the proxy for API requests
-  
+  const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
+
+  // Fetch couple dashboard data
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -16,9 +18,6 @@ export default function CoupleDashboard() {
           throw new Error(`Error fetching dashboard: ${errorText}`);
         }
         const data = await response.json();
-
-        console.log("Fetched Dashboard Data:", data); // Debugging
-
         if (data.status === "success") {
           setDashboardData(data.data);
         } else {
@@ -32,11 +31,28 @@ export default function CoupleDashboard() {
     if (user_id) fetchDashboardData();
   }, [user_id]);
 
+  // Fetch vendor requests and booking status
   useEffect(() => {
-    if (dashboardData) {
-      console.log("Profile Image URL:", dashboardData.profile_image); // Log after dashboardData is set
-    }
-  }, [dashboardData]);
+    const fetchVendorRequests = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/couple/requests/${user_id}`);
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Error fetching vendor requests: ${errorText}`);
+        }
+        const data = await response.json();
+        if (data.status === "success") {
+          setVendorRequests(data.data);
+        } else {
+          console.error("Error fetching vendor requests:", data.message);
+        }
+      } catch (error) {
+        console.error("API Error (Requests):", error);
+      }
+    };
+
+    if (user_id) fetchVendorRequests();
+  }, [user_id]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -54,9 +70,11 @@ export default function CoupleDashboard() {
         <header className="bg-orange-300 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
           <img src="WEDNEST_LOGO.png" alt="WedNest Logo" className="h-24 w-auto" />
           <div className="flex gap-6">
-            <button onClick={() => navigate("/couple-home")}  className="text-lg"><img src="/Home.png" alt="Home" className="h-5 w-auto" /></button>
-            <button  onClick={() => navigate("/Cart")}className="text-3xl">🛒</button>
-            <button onClick={()=> navigate("/couple-dashboard")} className="text-3xl">👤</button>
+            <button onClick={() => navigate("/couple-home")} className="text-lg">
+              <img src="/Home.png" alt="Home" className="h-5 w-auto" />
+            </button>
+            <button onClick={() => navigate("/Cart")} className="text-3xl">🛒</button>
+            <button onClick={() => navigate("/couple-dashboard")} className="text-3xl">👤</button>
           </div>
         </header>
 
@@ -75,14 +93,14 @@ export default function CoupleDashboard() {
           <div className="w-32 h-32 bg-gray-400 rounded-full">
             {dashboardData?.profile_image ? (
               <img
-              src={
-                dashboardData.profile_image.startsWith("http")
-                  ? dashboardData.profile_image.replace(/^http:/, "https:")
-                  : `${API_URL}${dashboardData.profile_image}`
-              }
-              alt="Profile"
-              className="w-full h-full rounded-full object-cover"
-            />
+                src={
+                  dashboardData.profile_image.startsWith("http")
+                    ? dashboardData.profile_image.replace(/^http:/, "https:")
+                    : `${API_URL}${dashboardData.profile_image}`
+                }
+                alt="Profile"
+                className="w-full h-full rounded-full object-cover"
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gray-300 rounded-full">
                 No Image
@@ -111,7 +129,6 @@ export default function CoupleDashboard() {
                 }}
               >
                 <h2 className="text-xl font-semibold">Budget</h2>
-                {/* Display budget directly */}
                 {dashboardData?.budget != null ? (
                   <p className="text-lg">Budget Set: ${dashboardData.budget}</p>
                 ) : (
@@ -144,26 +161,29 @@ export default function CoupleDashboard() {
               </div>
             </div>
 
-            {/* Vendors Booked Section */}
+            {/* Vendors Booked Section with status */}
             <div
               className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
               style={{
                 backgroundImage: "url('/bgcouple.jpg')",
                 height: "300px",
                 width: "100%",
+                overflowY: "auto",
               }}
             >
               <h2 className="text-xl text-center font-semibold">Vendors Booked</h2>
-              {dashboardData?.booked_vendors?.length > 0 ? (
-                <ul className="text-lg text-center">
-                  {dashboardData.booked_vendors.map((vendor, index) => (
-                    <li key={index} className="py-1">
-                      {vendor.service_type} - {vendor.vendor_id}
+              {vendorRequests.length > 0 ? (
+                <ul className="text-center w-full">
+                  {vendorRequests.map((request, index) => (
+                    <li key={index} className="text-lg py-1 border-b border-gray-300">
+                      <strong>{request.vendor_id.businessName}</strong> <br />
+                      Service: {request.vendor_id.vendorType} <br />
+                      Status: <span className="text-blue-700">{request.status}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-lg text-center">No vendors booked</p>
+                <p className="text-lg text-center">No vendors booked yet</p>
               )}
             </div>
           </div>
