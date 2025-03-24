@@ -66,8 +66,8 @@ export default function CoupleDashboard() {
   return (
     <div className="fixed inset-0 w-full h-full bg-blue-50 overflow-hidden">
       <div className="h-full overflow-y-auto">
-        {/* Header */}
-        <header className="bg-rose-200 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
+        {/* Header with the same original color */}
+        <header className="bg-orange-300 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
           <img src="WEDNEST_LOGO.png" alt="WedNest Logo" className="h-24 w-auto" />
           <div className="flex gap-6">
             <button onClick={() => navigate("/couple-home")} className="text-lg">
@@ -123,7 +123,7 @@ export default function CoupleDashboard() {
               <div
                 className="p-6 rounded-2xl text-gray-900 shadow-lg flex flex-col items-center justify-center"
                 style={{
-                  background: "linear-gradient(135deg, #fff1e6, #f8d7da)",
+                  background: "linear-gradient(135deg, #fff1e6, #f9dfe7)",
                   height: "300px",
                   width: "100%",
                 }}
@@ -140,7 +140,7 @@ export default function CoupleDashboard() {
               <div
                 className="p-6 rounded-2xl text-center text-gray-900 shadow-lg flex flex-col items-center justify-center"
                 style={{
-                  background: "linear-gradient(135deg, #fefefe, #f7e7ce)",
+                  background: "linear-gradient(135deg, #fefefe, #f8e1c7)",
                   height: "300px",
                   width: "100%",
                 }}
@@ -165,7 +165,7 @@ export default function CoupleDashboard() {
             <div
               className="p-6 rounded-2xl text-gray-900 shadow-lg flex flex-col items-center"
               style={{
-                background: "linear-gradient(135deg, #fdeff9, #fbd5d3)",
+                background: "linear-gradient(135deg, #fce4ec, #fdeff9)",
                 height: "500px",
                 width: "100%",
                 overflowY: "auto",
@@ -192,7 +192,7 @@ export default function CoupleDashboard() {
           <div className="text-center mt-6">
             <button
               onClick={handleLogout}
-              className="bg-rose-500 text-white px-6 py-2 rounded shadow-lg"
+              className="bg-red-500 text-white px-6 py-2 rounded shadow-lg"
             >
               Log Out
             </button>
