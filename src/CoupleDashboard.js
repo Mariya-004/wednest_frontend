@@ -8,6 +8,7 @@ export default function CoupleDashboard() {
   const user_id = localStorage.getItem("user_id");
   const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
 
+  // Fetch couple dashboard data
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -30,6 +31,7 @@ export default function CoupleDashboard() {
     if (user_id) fetchDashboardData();
   }, [user_id]);
 
+  // Fetch vendor requests and booking status
   useEffect(() => {
     const fetchVendorRequests = async () => {
       try {
@@ -80,7 +82,7 @@ export default function CoupleDashboard() {
         <div
           className="fixed left-0 top-[100px] w-1/5 h-[calc(100vh-100px)] flex flex-col items-center justify-center space-y-6 px-4 shadow-lg"
           style={{
-            backgroundImage: "url('/sidebar.jpeg')",
+            backgroundImage: "url('/sidebar.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundColor: "rgba(255, 255, 255, 0.3)",
@@ -114,16 +116,14 @@ export default function CoupleDashboard() {
 
         {/* Main Content */}
         <div className="pl-[22%] pt-[120px] pr-6">
-          <div className="grid grid-cols-3 gap-6 p-6">
+          <div className="grid grid-cols-3 gap-6 p-6 items-start">
             {/* Budget and Welcome Back Section */}
             <div className="col-span-2 grid grid-cols-2 gap-6">
               {/* Budget Card */}
               <div
                 className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
                 style={{
-                  backgroundImage: "url('/sidebar.png')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
+                  backgroundImage: "url('/bgcouple.jpg')",
                   height: "300px",
                   width: "100%",
                 }}
@@ -140,9 +140,7 @@ export default function CoupleDashboard() {
               <div
                 className="p-6 rounded-lg text-center text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
                 style={{
-                  backgroundImage: "url('/sidebar.png')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
+                  backgroundImage: "url('/bgcouple.jpg')",
                   height: "300px",
                   width: "100%",
                 }}
@@ -163,23 +161,23 @@ export default function CoupleDashboard() {
               </div>
             </div>
 
-            {/* Vendors Booked Section */}
+            {/* Adaptive Vendors Booked Section */}
             <div
-              className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
+              className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-start shadow-md"
               style={{
-                backgroundImage: "url('/sidebar.png')",
+                backgroundImage: "url('/bgcouple.jpg')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                height: "300px",
                 width: "100%",
-                overflowY: "auto",
+                maxHeight: "500px",
+                overflowY: vendorRequests.length > 4 ? "auto" : "visible", // Enable scroll only if items overflow
               }}
             >
-              <h2 className="text-xl text-center font-semibold">Vendors Booked</h2>
+              <h2 className="text-xl text-center font-semibold mb-4">Vendors Booked</h2>
               {vendorRequests.length > 0 ? (
                 <ul className="text-center w-full">
                   {vendorRequests.map((request, index) => (
-                    <li key={index} className="text-lg py-1 border-b border-gray-300">
+                    <li key={index} className="text-lg py-2 border-b border-gray-300">
                       <strong>{request.vendor_id.businessName}</strong> <br />
                       Service: {request.vendor_id.vendorType} <br />
                       Status: <span className="text-blue-700">{request.status}</span>
