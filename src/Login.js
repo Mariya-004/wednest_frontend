@@ -36,35 +36,31 @@ const Login = () => {
       setLoading(false);
 
       if (response.ok && data.status === "success") {
-        console.log("Login data received:", data.data); // ✅ Debug log
-
         setMessage("Login successful! Redirecting...");
         setMessageType("success");
 
-        const userType = data.data?.user_type?.toLowerCase() || "";
-
         // ✅ Store user details in localStorage
         localStorage.setItem("userEmail", email);
-        if (data.token) localStorage.setItem("authToken", data.token);
-        localStorage.setItem("userRole", userType);
-        localStorage.setItem("user_id", data.data?.user_id || "");
-        localStorage.setItem("user_type", userType);
-
-        // ✅ Redirect
-        if (userType === "vendor") {
-          navigate("/vendor-dashboard");
-        } else if (userType === "couple") {
-          navigate("/couple-dashboard");
+        if (data.token) {
+          localStorage.setItem("authToken", data.token);
         } else {
-          setMessage("User type not recognized.");
-          setMessageType("error");
+          console.warn("Token not found in response:", data);
         }
+        localStorage.setItem("userRole", role);
+        localStorage.setItem("user_id", data.data?.user_id || "");
+        localStorage.setItem("user_type", data.data?.user_type || "");
+
+        console.log("Login success! Redirecting to:", data.data.user_type);
+
+        // ✅ Redirect based on user_type
+        navigate(data.data.user_type === "Vendor" ? "/vendor-dashboard" : "/couple-dashboard");
       } else {
+        console.error("Login failed with response:", data);
         setMessage(data?.message || "Invalid credentials. Please try again.");
         setMessageType("error");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Network or server error:", error);
       setMessage("Network error. Please try again later.");
       setMessageType("error");
       setLoading(false);
