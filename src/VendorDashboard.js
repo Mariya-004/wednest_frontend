@@ -21,7 +21,7 @@ export default function VendorDashboard() {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/vendor/dashboard/${user_id}`,
+          `https://wednest-backend-0ti8.onrender.com/api/vendor/dashboard/${user_id}`,
           {
             headers: { Authorization: `Bearer ${authToken}` },
           }
