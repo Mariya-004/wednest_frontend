@@ -8,7 +8,6 @@ export default function CoupleDashboard() {
   const user_id = localStorage.getItem("user_id");
   const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
 
-  // Fetch couple dashboard data
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -31,7 +30,6 @@ export default function CoupleDashboard() {
     if (user_id) fetchDashboardData();
   }, [user_id]);
 
-  // Fetch vendor requests and booking status
   useEffect(() => {
     const fetchVendorRequests = async () => {
       try {
@@ -123,7 +121,9 @@ export default function CoupleDashboard() {
               <div
                 className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
                 style={{
-                  backgroundImage: "url('/bgcouple.jpg')",
+                  backgroundImage: "url('/sidebar.png')",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
                   height: "300px",
                   width: "100%",
                 }}
@@ -140,7 +140,9 @@ export default function CoupleDashboard() {
               <div
                 className="p-6 rounded-lg text-center text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
                 style={{
-                  backgroundImage: "url('/bgcouple.jpg')",
+                  backgroundImage: "url('/sidebar.png')",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
                   height: "300px",
                   width: "100%",
                 }}
@@ -161,11 +163,13 @@ export default function CoupleDashboard() {
               </div>
             </div>
 
-            {/* Vendors Booked Section with status */}
+            {/* Vendors Booked Section */}
             <div
               className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
               style={{
-                backgroundImage: "url('/bgcouple.jpg')",
+                backgroundImage: "url('/sidebar.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
                 height: "300px",
                 width: "100%",
                 overflowY: "auto",
