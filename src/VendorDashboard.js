@@ -72,7 +72,13 @@ export default function VendorDashboard() {
     navigate("/");
   };
 
-  
+  const handleNavigateToRequests = () => {
+    if (authToken) {
+      navigate("/vendor-requests");
+    } else {
+      navigate("/");
+    }
+  };
 
   if (loading) {
     return (
@@ -167,7 +173,7 @@ export default function VendorDashboard() {
             </div>
 
             <button
-              onClick={() => navigate("/vendor-requests")}
+              onClick={handleNavigateToRequests}
               className="p-6 rounded-3xl text-black shadow-xl flex flex-col items-center justify-center transition-transform hover:scale-105"
               style={{
                 background: "linear-gradient(135deg, #fdf0f4, #faf1ff)",
