@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function VendorDashboard() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [upcomingBookings, setUpcomingBookings] = useState([]);
   const navigate = useNavigate();
 
   const email = localStorage.getItem("userEmail");
@@ -35,7 +36,28 @@ export default function VendorDashboard() {
       }
     };
 
+    const fetchUpcomingBookings = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}/api/vendor/requests/${user_id}`,
+          {
+            headers: { Authorization: `Bearer ${authToken}` },
+          }
+        );
+        const data = await response.json();
+
+        if (response.ok && data.status === "success") {
+          setUpcomingBookings(data.data);
+        } else {
+          console.error("Failed to fetch upcoming bookings:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching upcoming bookings:", error);
+      }
+    };
+
     fetchUserData();
+    fetchUpcomingBookings();
   }, [user_id, authToken, userRole, email, navigate]);
 
   const handleLogout = () => {
@@ -99,8 +121,6 @@ export default function VendorDashboard() {
         <div className="flex flex-col w-3/4 p-6 bg-blue-50 min-h-screen">
           {/* Dashboard Tiles */}
           <div className="grid grid-cols-3 gap-6">
-          
-
             <div
               className="p-6 rounded-2xl text-black shadow-lg flex flex-col items-center justify-center"
               style={{
@@ -110,10 +130,10 @@ export default function VendorDashboard() {
             >
               <h2 className="text-xl font-bold">Coming Up</h2>
               <ul className="mt-2 text-lg text-center">
-                {userData?.upcoming_bookings?.length > 0 ? (
-                  userData.upcoming_bookings.map((booking, index) => (
+                {upcomingBookings.length > 0 ? (
+                  upcomingBookings.map((booking, index) => (
                     <li key={index} className="mt-1">
-                      {booking}
+                      {booking.couple_id.username} - {booking.couple_id.email}
                     </li>
                   ))
                 ) : (
