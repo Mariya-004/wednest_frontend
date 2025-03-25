@@ -73,11 +73,9 @@ export default function VendorDashboard() {
   };
 
   const handleNavigateToRequests = () => {
-    if (!authToken) {
-      navigate("/login");
-    } else {
+   
       navigate("/vendor-requests");
-    }
+    
   };
 
   if (loading) {
