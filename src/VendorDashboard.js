@@ -8,6 +8,7 @@ export default function VendorDashboard() {
 
   const email = localStorage.getItem("userEmail");
   const authToken = localStorage.getItem("authToken");
+  console.log(authToken);
   const userRole = localStorage.getItem("userRole");
   const user_id = localStorage.getItem("user_id");
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
