@@ -7,6 +7,7 @@ export default function VendorDashboard() {
   const navigate = useNavigate();
 
   const email = localStorage.getItem("userEmail");
+  const authToken = localStorage.getItem("authToken");
   const userRole = localStorage.getItem("userRole");
   const user_id = localStorage.getItem("user_id");
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
@@ -14,7 +15,12 @@ export default function VendorDashboard() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/vendor/dashboard/${user_id}`);
+        const response = await fetch(
+          `${API_URL}/api/vendor/dashboard/${user_id}`,
+          {
+            headers: { Authorization: `Bearer ${authToken}` },
+          }
+        );
         const data = await response.json();
 
         if (response.ok && data.status === "success") {
@@ -31,7 +37,12 @@ export default function VendorDashboard() {
 
     const fetchUpcomingBookings = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/vendor/requests/${user_id}`);
+        const response = await fetch(
+          `${API_URL}/api/vendor/requests/${user_id}`,
+          {
+            headers: { Authorization: `Bearer ${authToken}` },
+          }
+        );
         const data = await response.json();
 
         if (response.ok && data.status === "success") {
@@ -54,7 +65,7 @@ export default function VendorDashboard() {
 
     fetchUserData();
     fetchUpcomingBookings();
-  }, [user_id, userRole, email, navigate]);
+  }, [user_id, authToken, userRole, email, navigate]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -62,7 +73,11 @@ export default function VendorDashboard() {
   };
 
   const handleNavigateToRequests = () => {
-    navigate("/vendor-requests");
+    if (authToken) {
+      navigate("/vendor-requests");
+    } else {
+      navigate("/");
+    }
   };
 
   if (loading) {
