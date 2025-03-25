@@ -108,16 +108,16 @@ export default function VendorDashboard() {
           }}
         >
           <div className="grid grid-cols-3 gap-6">
-            <motion.div
+            <div
               whileHover={{ scale: 1.05 }}
               className="p-6 rounded-xl text-black bg-cover bg-center shadow-lg h-[250px]"
               style={{ backgroundImage: "url('/bgcouple.jpg')" }}
             >
               <h2 className="text-xl font-semibold">What You Earned?</h2>
               <p className="text-3xl font-bold mt-2">${userData?.earnings || 0}</p>
-            </motion.div>
+            </div>
 
-            <motion.div
+            <div
               whileHover={{ scale: 1.05 }}
               className="p-6 rounded-xl text-center text-black bg-cover bg-center shadow-lg h-[250px]"
               style={{ backgroundImage: "url('/bgcouple.jpg')" }}
@@ -134,9 +134,9 @@ export default function VendorDashboard() {
                   <p>No upcoming bookings</p>
                 )}
               </ul>
-            </motion.div>
+            </div>
 
-            <motion.div
+            <div
               whileHover={{ scale: 1.05 }}
               className="p-6 rounded-xl text-black bg-cover bg-center shadow-lg h-[250px] flex flex-col justify-between"
               style={{ backgroundImage: "url('/bgcouple.jpg')" }}
@@ -151,7 +151,7 @@ export default function VendorDashboard() {
               >
                 View Now
               </button>
-            </motion.div>
+            </div>
           </div>
 
           {/* Ratings & Service Images */}
@@ -184,13 +184,13 @@ export default function VendorDashboard() {
           </div>
 
           {/* Floating Bookings & Requests button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
+          <button
+            
             className="fixed bottom-6 right-6 bg-orange-500 text-white px-6 py-3 rounded-full shadow-xl hover:bg-orange-600 transition text-lg"
             onClick={() => navigate("/vendor-requests")}
           >
             Bookings & Requests
-          </motion.button>
+          </button>
         </div>
       </div>
     </div>
