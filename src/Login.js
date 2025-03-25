@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -47,12 +47,17 @@ const Login = () => {
         localStorage.setItem("user_type", data.data?.user_type || "");
   
         // ✅ Redirect immediately
-        navigate(data.data.user_type === "Vendor" ? "/vendor-dashboard" : "/couple-dashboard");
+        if (userRole === "Vendor") {  
+          navigate("/vendor/dashboard");
+        } else {  
+          navigate("/couple/dashboard");
+        }
       } else {
-        setMessage(data?.message || "Invalid credentials. Please try again.");
+        setMessage(data.message || "Login failed. Please try again.");
         setMessageType("error");
-      }
-    } catch (error) {
+  
+    }
+   } catch (error) {
       console.error("Login error:", error);
       setMessage("Network error. Please try again later.");
       setMessageType("error");
