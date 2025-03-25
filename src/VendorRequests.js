@@ -11,10 +11,7 @@ export default function VendorRequests() {
   const vendor_id = localStorage.getItem("user_id");
 
   useEffect(() => {
-    if (!authToken || !vendor_id) {
-      navigate("/login");
-      return;
-    }
+  
 
     const fetchRequests = async () => {
       try {
