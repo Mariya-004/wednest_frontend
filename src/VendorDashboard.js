@@ -130,7 +130,7 @@ export default function VendorDashboard() {
 
         {/* Main Content - elegant & classy */}
         <div className="flex flex-col w-3/4 p-6 bg-gradient-to-b from-white to-blue-50 min-h-screen">
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 gap-8">
             <div
               className="p-6 rounded-3xl text-black shadow-xl transition-transform hover:scale-105"
               style={{
@@ -164,7 +164,8 @@ export default function VendorDashboard() {
               )}
             </div>
 
-            <div
+            <button
+              onClick={() => navigate("/vendor-requests")}
               className="p-6 rounded-3xl text-black shadow-xl flex flex-col items-center justify-center transition-transform hover:scale-105"
               style={{
                 background: "linear-gradient(135deg, #fdf0f4, #faf1ff)",
@@ -175,20 +176,10 @@ export default function VendorDashboard() {
               <p className="text-center text-md">
                 Manage all your service requests easily
               </p>
-            </div>
-
-            
+            </button>
           </div>
 
           <div className="flex flex-col gap-8 mt-10">
-            <div className="p-6 text-center border-4 border-gray-200 rounded-3xl shadow-xl bg-white text-black">
-              <h2 className="text-2xl font-bold mb-2">Ratings</h2>
-              <div className="flex justify-center text-yellow-400 text-4xl mt-3">
-                {"⭐".repeat(userData?.ratings || 0)}
-                {"☆".repeat(5 - (userData?.ratings || 0))}
-              </div>
-            </div>
-
             <div className="p-6 text-center border-4 border-gray-200 rounded-3xl shadow-xl bg-gray-50 text-black">
               <h2 className="text-2xl font-bold mb-4">Your Service Images</h2>
               <div className="flex justify-center gap-4 flex-wrap">
