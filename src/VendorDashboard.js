@@ -8,10 +8,11 @@ export default function VendorDashboard() {
 
   const email = localStorage.getItem("userEmail");
   const authToken = localStorage.getItem("authToken");
-  console.log(authToken);
   const userRole = localStorage.getItem("userRole");
   const user_id = localStorage.getItem("user_id");
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+
+  console.log("Auth Token:", authToken); // Added console.log
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -73,7 +74,13 @@ export default function VendorDashboard() {
     navigate("/");
   };
 
-  
+  const handleNavigateToRequests = () => {
+    if (authToken) {
+      navigate("/vendor-requests");
+    } else {
+      navigate("/");
+    }
+  };
 
   if (loading) {
     return (
@@ -167,9 +174,19 @@ export default function VendorDashboard() {
               )}
             </div>
 
-            <button onClick={() => navigate("/vendor-requests")} className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
-                Manage Requests
-              </button>
+            <button
+              onClick={handleNavigateToRequests}
+              className="p-6 rounded-3xl text-black shadow-xl flex flex-col items-center justify-center transition-transform hover:scale-105"
+              style={{
+                background: "linear-gradient(135deg, #fdf0f4, #faf1ff)",
+                height: "250px",
+              }}
+            >
+              <h2 className="text-2xl font-bold mb-3">Bookings & Requests</h2>
+              <p className="text-center text-md">
+                Manage all your service requests easily
+              </p>
+            </button>
           </div>
 
           <div className="flex flex-col gap-8 mt-10">

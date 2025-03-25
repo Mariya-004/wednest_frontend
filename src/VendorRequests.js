@@ -7,10 +7,14 @@ export default function VendorRequests() {
   const navigate = useNavigate();
 
   const authToken = localStorage.getItem("authToken");
+  console.log("Auth Token:", authToken); // Log the authToken
   const vendor_id = localStorage.getItem("user_id");
 
   useEffect(() => {
-    
+    if (!authToken || !vendor_id) {
+      navigate("/login");
+      return;
+    }
 
     const fetchRequests = async () => {
       try {
@@ -37,21 +41,36 @@ export default function VendorRequests() {
     fetchRequests();
   }, [authToken, vendor_id, navigate]);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-xl">
+        Loading requests...
+      </div>
+    );
+  }
   const handleAction = async (requestId, action) => {
     try {
-      const response = await fetch(
-        `https://wednest-backend-0ti8.onrender.com/api/vendor/requests/${requestId}/${action}`,
-        {
-          method: "PUT",
-          headers: { Authorization: `Bearer ${authToken}` },
-        }
-      );
+      const response = await fetch(`https://wednest-backend-0ti8.onrender.com/api/request/${requestId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: action === "accept" ? "Accepted" : "Declined" }),
+      });
+  
       const data = await response.json();
-
+  
       if (response.ok && data.status === "success") {
-        setRequests((prev) =>
-          prev.filter((req) => req._id !== requestId)
-        );
+        if (action === "accept") {
+          setRequests((prev) =>
+            prev.map((req) =>
+              req._id === requestId ? { ...req, status: "Accepted" } : req
+            )
+          );
+        } else {
+          setRequests((prev) => prev.filter((req) => req._id !== requestId));
+        }
         alert(`Request ${action}ed successfully!`);
       } else {
         console.error("Action failed:", data.message);
@@ -60,20 +79,15 @@ export default function VendorRequests() {
       console.error("Error updating request:", error);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-xl">
-        Loading requests...
-      </div>
-    );
-  }
-
+  
   return (
-    <div className="min-h-screen p-8 bg-orange-50">
-      <h1 className="text-3xl font-bold mb-6">Bookings and Requests</h1>
+    <div
+      className="min-h-screen p-8 bg-cover bg-center"
+      style={{ backgroundImage: "url('/bg.png')" }}
+    >
+      <h1 className="text-3xl font-bold mb-6 text-center">Bookings and Requests</h1>
       {requests.length === 0 ? (
-        <p>No pending requests!</p>
+        <p className="text-center">No pending requests!</p>
       ) : (
         <div className="space-y-6">
           {requests.map((request) => (
@@ -88,9 +102,7 @@ export default function VendorRequests() {
                   className="w-16 h-16 rounded-full object-cover"
                 />
                 <div>
-                  <p className="font-semibold">
-                    Name: {request.couple_id?.username}
-                  </p>
+                  <p className="font-semibold">Name: {request.couple_id?.username}</p>
                   <p>Date of event: {new Date(request.event_date).toLocaleDateString()}</p>
                 </div>
               </div>
