@@ -39,7 +39,7 @@ export default function VendorDashboard() {
     const fetchUpcomingBookings = async () => {
       try {
         const response = await fetch(
-          `${API_URL}/api/vendor/requests/${user_id}`,
+          `${API_URL}/api/couple/dashboard/${couple_id}`,
           {
             headers: { Authorization: `Bearer ${authToken}` },
           }
@@ -47,7 +47,10 @@ export default function VendorDashboard() {
         const data = await response.json();
 
         if (response.ok && data.status === "success") {
-          setUpcomingBookings(data.data);
+          setUpcomingBookings(data.data.booked_vendors.map(vendor => ({
+            ...vendor,
+            wedding_date: data.data.wedding_date
+          })));
         } else {
           console.error("Failed to fetch upcoming bookings:", data.message);
         }
