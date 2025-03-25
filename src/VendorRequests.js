@@ -100,8 +100,8 @@ export default function VendorRequests() {
                   className="w-16 h-16 rounded-full object-cover"
                 />
                 <div>
-                  <p className="font-semibold">Name: {request.couple_id?.username}</p>
-                  <p>Date of event: {new Date(request.couple_id?.wedding_date).toLocaleDateString()}</p>
+                  <p className="font-semibold">Name: {request.couple_id?.username || "N/A"}</p>
+                  <p>Date of event: {new Date(request.couple_id?.wedding_date).toLocaleDateString() || "N/A"}</p>
                 </div>
               </div>
               <div className="flex gap-3">
