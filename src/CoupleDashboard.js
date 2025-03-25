@@ -5,7 +5,6 @@ export default function CoupleDashboard() {
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const [vendorRequests, setVendorRequests] = useState([]);
-  const [countdown, setCountdown] = useState(""); // Add state for countdown
   const user_id = localStorage.getItem("user_id");
   const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
 
@@ -55,30 +54,6 @@ export default function CoupleDashboard() {
     if (user_id) fetchVendorRequests();
   }, [user_id]);
 
-  useEffect(() => {
-    if (dashboardData?.wedding_date) {
-      const interval = setInterval(() => {
-        const now = new Date();
-        const wedding = new Date(dashboardData.wedding_date);
-        const timeDifference = wedding - now;
-
-        if (timeDifference <= 0) {
-          setCountdown("The wedding day is here!");
-          clearInterval(interval);
-        } else {
-          const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-          setCountdown(`${days}d ${hours}h ${minutes}m ${seconds}s`);
-        }
-      }, 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [dashboardData?.wedding_date]);
-
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
@@ -88,10 +63,18 @@ export default function CoupleDashboard() {
     navigate("/couple-profile");
   };
 
+  const calculateCountdown = (weddingDate) => {
+    const now = new Date();
+    const wedding = new Date(weddingDate);
+    const timeDifference = wedding - now;
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    return days > 0 ? `${days} days left` : "The big day is here!";
+  };
+
   return (
-    <div className="fixed inset-0 w-full h-full bg-blue-100 overflow-hidden">
+    <div className="fixed inset-0 w-full h-full bg-blue-50 overflow-hidden">
       <div className="h-full overflow-y-auto">
-        {/* Header */}
+        {/* Header with the same original color */}
         <header className="bg-orange-300 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10 shadow-lg">
           <img src="WEDNEST_LOGO.png" alt="WedNest Logo" className="h-24 w-auto" />
           <div className="flex gap-6">
@@ -110,12 +93,12 @@ export default function CoupleDashboard() {
             backgroundImage: "url('/sidebar.jpeg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
             backgroundBlendMode: "overlay",
           }}
         >
-          <h2 className="text-lg font-semibold text-black">Welcome</h2>
-          <div className="w-32 h-32 bg-gray-400 rounded-full">
+          <h2 className="text-lg font-semibold text-gray-800">Welcome</h2>
+          <div className="w-32 h-32 bg-gray-300 rounded-full overflow-hidden">
             {dashboardData?.profile_image ? (
               <img
                 src={
@@ -124,25 +107,19 @@ export default function CoupleDashboard() {
                     : `${API_URL}${dashboardData.profile_image}`
                 }
                 alt="Profile"
-                className="w-full h-full rounded-full object-cover"
+                className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gray-300 rounded-full">
+              <div className="w-full h-full flex items-center justify-center">
                 No Image
               </div>
             )}
           </div>
-          <p className="font-semibold text-black text-center">@{dashboardData?.username || "Username"}</p>
-          <p className="text-black text-center">{dashboardData?.email || "user@example.com"}</p>
-          <button onClick={handleEditProfile} className="bg-blue-500 text-white px-6 py-2 rounded">
+          <p className="font-semibold text-gray-800 text-center">@{dashboardData?.username || "Username"}</p>
+          <p className="text-gray-800 text-center">{dashboardData?.email || "user@example.com"}</p>
+          <button onClick={handleEditProfile} className="bg-rose-400 text-white px-6 py-2 rounded shadow">
             Edit Profile
           </button>
-
-          {/* Wedding Countdown */}
-          <div className="mt-6 bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-black">Wedding Countdown</h2>
-            <p className="text-lg text-black mt-2">{countdown}</p>
-          </div>
         </div>
 
         {/* Main Content */}
@@ -152,31 +129,31 @@ export default function CoupleDashboard() {
             <div className="col-span-2 grid grid-cols-2 gap-6">
               {/* Budget Card */}
               <div
-                className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
+                className="p-6 rounded-2xl text-gray-900 shadow-lg flex flex-col items-center justify-center"
                 style={{
-                  backgroundImage: "url('/bgcouple.jpg')",
+                  background: "linear-gradient(135deg, #fff1e6, #f9dfe7)",
                   height: "300px",
                   width: "100%",
                 }}
               >
-                <h2 className="text-xl font-semibold">Budget</h2>
+                <h2 className="text-2xl font-bold mb-4">Budget</h2>
                 {dashboardData?.budget != null ? (
-                  <p className="text-lg">Budget Set: ${dashboardData.budget}</p>
+                  <p className="text-xl">Budget Set: ${dashboardData.budget}</p>
                 ) : (
-                  <p className="text-lg">Loading...</p>
+                  <p className="text-xl">Loading...</p>
                 )}
               </div>
 
               {/* Welcome Back Card */}
               <div
-                className="p-6 rounded-lg text-center text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
+                className="p-6 rounded-2xl text-center text-gray-900 shadow-lg flex flex-col items-center justify-center"
                 style={{
-                  backgroundImage: "url('/bgcouple.jpg')",
+                  background: "linear-gradient(135deg, #fefefe, #f8e1c7)",
                   height: "300px",
                   width: "100%",
                 }}
               >
-                <h2 className="text-xl font-semibold">
+                <h2 className="text-2xl font-bold mb-4">
                   Welcome Back, {dashboardData?.username || "User"}!
                 </h2>
                 <p className="text-lg">
@@ -190,26 +167,43 @@ export default function CoupleDashboard() {
                     : "Not Set"}
                 </p>
               </div>
+
+              {/* Wedding Countdown Card */}
+              <div
+                className="p-6 rounded-2xl text-center text-gray-900 shadow-lg flex flex-col items-center justify-center"
+                style={{
+                  background: "linear-gradient(135deg, #e0f7fa, #b2ebf2)",
+                  height: "300px",
+                  width: "100%",
+                }}
+              >
+                <h2 className="text-2xl font-bold mb-4">Wedding Countdown</h2>
+                <p className="text-lg">
+                  {dashboardData?.wedding_date
+                    ? calculateCountdown(dashboardData.wedding_date)
+                    : "Wedding date not set"}
+                </p>
+              </div>
             </div>
 
-            {/* Vendors Booked Section with status */}
+            {/* Vendors Booked Section */}
             <div
-              className="p-6 rounded-lg text-black bg-cover bg-center flex flex-col items-center justify-center shadow-md"
+              className="p-6 rounded-2xl text-gray-900 shadow-lg flex flex-col items-center"
               style={{
-                backgroundImage: "url('/bgcouple.jpg')",
-                height: "300px",
+                background: "linear-gradient(135deg, #fce4ec, #fdeff9)",
+                height: "500px",
                 width: "100%",
                 overflowY: "auto",
               }}
             >
-              <h2 className="text-xl text-center font-semibold">Vendors Booked</h2>
+              <h2 className="text-2xl font-bold mb-4">Vendors Booked</h2>
               {vendorRequests.length > 0 ? (
                 <ul className="text-center w-full">
                   {vendorRequests.map((request, index) => (
-                    <li key={index} className="text-lg py-1 border-b border-gray-300">
+                    <li key={index} className="text-lg py-2 border-b border-gray-300">
                       <strong>{request.vendor_id.businessName}</strong> <br />
                       Service: {request.vendor_id.vendorType} <br />
-                      Status: <span className="text-blue-700">{request.status}</span>
+                      Status: <span className="text-rose-600">{request.status}</span>
                     </li>
                   ))}
                 </ul>
@@ -223,7 +217,7 @@ export default function CoupleDashboard() {
           <div className="text-center mt-6">
             <button
               onClick={handleLogout}
-              className="bg-red-500 text-white px-6 py-2 rounded shadow-md"
+              className="bg-red-500 text-white px-6 py-2 rounded shadow-lg"
             >
               Log Out
             </button>
