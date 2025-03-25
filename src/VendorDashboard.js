@@ -6,8 +6,6 @@ export default function VendorDashboard() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const email = localStorage.getItem("userEmail");
-  const userRole = localStorage.getItem("userRole");
   const user_id = localStorage.getItem("user_id");
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
@@ -54,7 +52,7 @@ export default function VendorDashboard() {
 
     fetchUserData();
     fetchUpcomingBookings();
-  }, [user_id, userRole, email, navigate]);
+  }, [user_id, navigate]);
 
   const handleLogout = () => {
     localStorage.clear();

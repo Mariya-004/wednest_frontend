@@ -6,20 +6,13 @@ export default function VendorRequests() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const authToken = localStorage.getItem("authToken");
-  console.log("Auth Token:", authToken); // Log the authToken
   const vendor_id = localStorage.getItem("user_id");
 
   useEffect(() => {
-  
-
     const fetchRequests = async () => {
       try {
         const response = await fetch(
-          `https://wednest-backend-0ti8.onrender.com/api/vendor/requests/${vendor_id}`,
-          {
-            headers: { Authorization: `Bearer ${authToken}` },
-          }
+          `https://wednest-backend-0ti8.onrender.com/api/vendor/requests/${vendor_id}`
         );
         const data = await response.json();
 
@@ -36,7 +29,7 @@ export default function VendorRequests() {
     };
 
     fetchRequests();
-  }, [authToken, vendor_id, navigate]);
+  }, [vendor_id, navigate]);
 
   if (loading) {
     return (
@@ -50,7 +43,6 @@ export default function VendorRequests() {
       const response = await fetch(`https://wednest-backend-0ti8.onrender.com/api/request/${requestId}`, {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ status: action === "accept" ? "Accepted" : "Declined" }),
