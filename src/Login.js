@@ -2,71 +2,73 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [role, setRole] = useState("Couple"); // Default role selection
+  const [role, setRole] = useState("Couple");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState(null); // State for displaying messages
-  const [messageType, setMessageType] = useState("error"); // 'error' or 'success'
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("error");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setMessage(null); // Reset message on new submission
-
+    setMessage(null);
+  
     if (!email || !password) {
       setMessage("Please enter both email and password.");
       setMessageType("error");
       return;
     }
-
+  
+    setLoading(true);
+  
     try {
-      const response = await fetch("https://wednest-backend-0ti8.onrender.com/api/login", {
+      const response = await fetch(`${API_URL}/api/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, role }),
       });
-
+  
       const data = await response.json();
-
-      if (data.status === "success") {
+      setLoading(false);
+  
+      if (response.ok && data.status === "success") {
         setMessage("Login successful! Redirecting...");
         setMessageType("success");
-
-        // ✅ Store login data in localStorage
+  
+        // ✅ Store user details in localStorage
         localStorage.setItem("userEmail", email);
-        localStorage.setItem("authToken", data.token);
+        if (data.token) localStorage.setItem("authToken", data.token);
         localStorage.setItem("userRole", role);
-
-
-        localStorage.setItem("user_id", data.data.user_id);
-        localStorage.setItem("user_type", data.data.user_type); // ✅ Storing user_type
-        
-
-        // ✅ Redirect based on role
-        setTimeout(() => {
-          if (data.data.user_type==="Vendor") {
-            navigate("/vendor-dashboard");
-          } else {
-            navigate("/couple-dashboard");
-          }
-        }, 1500); // Delay for showing success message before redirection
+        localStorage.setItem("user_id", data.data?.user_id || "");
+        localStorage.setItem("user_type", data.data?.user_type || "");
+  
+        if (data.data?.user_type === "Couple") {
+          localStorage.setItem("couple_id", data.data?.couple_id || "");
+        } else if (data.data?.user_type === "Vendor") {
+          localStorage.setItem("vendor_id", data.data?.vendor_id || "");
+        }
+  
+        // ✅ Redirect immediately
+        navigate(data.data.user_type === "Vendor" ? "/vendor-dashboard" : "/couple-dashboard");
       } else {
-        setMessage(data.message);
+        setMessage(data?.message || "Invalid credentials. Please try again.");
         setMessageType("error");
       }
     } catch (error) {
-      console.error("Error logging in", error);
-      setMessage("An error occurred while logging in.");
+      console.error("Login error:", error);
+      setMessage("Network error. Please try again later.");
       setMessageType("error");
+      setLoading(false);
     }
   };
+  
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-pink-100"
+    <div className="min-h-screen flex items-center justify-center bg-pink-100"
       style={{ backgroundImage: "url('/bg.png')", backgroundSize: "cover", backgroundPosition: "center" }}
     >
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md text-center">
@@ -75,11 +77,9 @@ const Login = () => {
 
         {/* Message Display */}
         {message && (
-          <div
-            className={`mt-4 px-4 py-2 rounded-lg text-sm ${
-              messageType === "error" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
-            }`}
-          >
+          <div className={`mt-4 px-4 py-2 rounded-lg text-sm ${
+            messageType === "error" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+          }`}>
             {message}
           </div>
         )}
@@ -103,6 +103,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-800 bg-pink-200 focus:ring-2 focus:ring-pink-400 focus:outline-none"
+              required
             />
 
             {/* Password Input with Toggle Visibility */}
@@ -113,6 +114,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-800 bg-pink-200 focus:ring-2 focus:ring-pink-400 focus:outline-none"
+                required
               />
               <button
                 type="button"
@@ -128,8 +130,9 @@ const Login = () => {
           <button
             type="submit"
             className="w-full mt-6 bg-pink-600 text-white py-3 rounded-lg hover:bg-pink-700 transition"
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
