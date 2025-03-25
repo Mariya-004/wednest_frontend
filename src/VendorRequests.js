@@ -92,7 +92,7 @@ export default function VendorRequests() {
                 />
                 <div>
                   <p className="font-semibold">Name: {request.couple_id?.username}</p>
-                  <p>Date of event: {new Date(request.event_date).toLocaleDateString()}</p>
+                  <p>Date of event: {new Date(request.couple_id?.wedding_date).toLocaleDateString()}</p>
                 </div>
               </div>
               <div className="flex gap-3">
