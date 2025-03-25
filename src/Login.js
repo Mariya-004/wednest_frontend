@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react"; // Fixed import statement
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -47,10 +47,10 @@ const Login = () => {
         localStorage.setItem("user_type", data.data?.user_type || "");
   
         // ✅ Redirect immediately
-        if (userRole === "Vendor") {  
-          navigate("/vendor/dashboard");
+        if (role === "Vendor") {  
+          navigate("/vendor-dashboard"); // Fixed navigation path
         } else {  
-          navigate("/couple/dashboard");
+          navigate("/couple-dashboard"); // Fixed navigation path
         }
       } else {
         setMessage(data.message || "Login failed. Please try again.");
