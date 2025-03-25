@@ -46,11 +46,14 @@ export default function VendorDashboard() {
         const data = await response.json();
 
         if (response.ok && data.status === "success") {
-          setUserData(prevData => ({
+          setUserData((prevData) => ({
             ...prevData,
-            upcoming_bookings: data.data.map(booking => (
-              `${booking.couple_id.username} - ${booking.couple_id.email} - ${new Date(booking.couple_id.wedding_date).toLocaleDateString()}`
-            ))
+            upcoming_bookings: data.data.map(
+              (booking) =>
+                `${booking.couple_id.username} | ${new Date(
+                  booking.couple_id.wedding_date
+                ).toLocaleDateString()}`
+            ),
           }));
         } else {
           console.error("Failed to fetch upcoming bookings:", data.message);
@@ -71,122 +74,100 @@ export default function VendorDashboard() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen text-lg">
-        Loading...
+      <div className="flex justify-center items-center min-h-screen text-xl font-semibold text-gray-600">
+        Loading vendor dashboard...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-orange-300 p-4 flex justify-between items-center shadow-md">
-        <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-20 w-auto" />
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-100">
+      <header className="bg-gradient-to-r from-orange-300 to-pink-400 p-4 flex justify-between items-center shadow-md">
+        <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-20" />
         <button
           onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+          className="bg-red-500 text-white px-5 py-2 rounded-xl shadow hover:bg-red-600 transition"
         >
           Logout
         </button>
       </header>
 
       <div className="flex">
-        {/* Sidebar */}
-        <div
-          className="p-6 w-1/4 text-center bg-cover bg-center shadow-lg flex flex-col justify-between min-h-screen"
-          style={{ backgroundImage: "url('/bgdash.jpeg')" }}
-        >
-          <div className="w-32 h-32 mb-4 rounded-full mx-auto overflow-hidden">
+        <aside className="w-1/4 bg-white p-6 shadow-xl rounded-r-3xl flex flex-col items-center">
+          <div className="w-32 h-32 rounded-full border-4 border-purple-300 overflow-hidden mb-4">
             <img
               src={userData?.profile_image || "/profile.png"}
               alt="Profile"
-              className="w-full h-full object-cover"
+              className="object-cover w-full h-full"
             />
           </div>
+          <h3 className="text-xl font-semibold text-gray-700 mb-1">
+            @{userData?.username}
+          </h3>
+          <p className="text-gray-500 text-sm">{userData?.email}</p>
 
-          <p className="font-semibold text-lg text-black">
-            @{userData?.username || "Loading..."}
-          </p>
-          <p className="text-black">{userData?.email || "No email found"}</p>
-          <p className="text-lg font-semibold mt-4 text-black">Business Name</p>
-          <p className="text-black">{userData?.business_name || "Not Set"}</p>
-          <p className="text-lg font-semibold mt-4 text-black">Vendor Type</p>
-          <p className="text-black">{userData?.vendor_type || "Not Set"}</p>
+          <div className="mt-6 text-center space-y-2">
+            <p className="font-medium text-gray-700">Business: {userData?.business_name || "Not Set"}</p>
+            <p className="font-medium text-gray-700">Vendor Type: {userData?.vendor_type || "Not Set"}</p>
+          </div>
 
           <button
             onClick={() => navigate("/vendor-profile")}
-            className="mt-6 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
+            className="mt-6 bg-purple-500 text-white px-4 py-2 rounded-full hover:bg-purple-600 transition shadow"
           >
             Edit Profile
           </button>
-        </div>
+        </aside>
 
-        {/* Main Content */}
-        <div className="flex flex-col w-3/4 p-6 bg-blue-50 min-h-screen">
-          {/* Dashboard Tiles */}
-          <div className="grid grid-cols-3 gap-6">
-            <div
-              className="p-6 rounded-2xl text-black shadow-lg flex flex-col items-center justify-center"
-              style={{
-                background: "linear-gradient(135deg, #fefefe, #f8e1c7)",
-                height: "250px",
-              }}
-            >
-              <h2 className="text-xl font-bold">Coming Up</h2>
-              <ul className="mt-2 text-lg text-center">
-                {userData?.upcoming_bookings?.length > 0 ? (
-                  userData.upcoming_bookings.map((booking, index) => (
-                    <li key={index} className="mt-1">
-                      {booking}
-                    </li>
-                  ))
-                ) : (
-                  <p>No upcoming bookings</p>
-                )}
-              </ul>
+        <main className="w-3/4 p-8">
+          <div className="grid grid-cols-2 gap-8">
+            <div className="bg-gradient-to-br from-yellow-100 to-pink-100 p-6 rounded-3xl shadow-xl flex flex-col items-center text-center">
+              <h2 className="text-2xl font-bold text-gray-700 mb-4">Upcoming Bookings</h2>
+              {userData?.upcoming_bookings?.length > 0 ? (
+                <ul className="text-gray-600 space-y-2">
+                  {userData.upcoming_bookings.map((booking, index) => (
+                    <li key={index}>{booking}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500">No upcoming bookings</p>
+              )}
             </div>
 
-            <div
-              className="p-6 rounded-2xl text-black shadow-lg flex flex-col justify-center items-center"
-              style={{
-                background: "linear-gradient(135deg, #fce4ec, #fdeff9)",
-                height: "250px",
-              }}
-            >
-              <h2 className="text-xl font-bold">Bookings & Requests</h2>
-              <p className="mt-2 text-center">Manage all your service requests</p>
+            <div className="bg-gradient-to-br from-pink-100 to-purple-200 p-6 rounded-3xl shadow-xl flex flex-col justify-center items-center text-center">
+              <h2 className="text-2xl font-bold text-gray-700 mb-2">Bookings & Requests</h2>
+              <p className="text-gray-500">Manage all your service requests efficiently.</p>
             </div>
           </div>
 
-          {/* Ratings & Service Images */}
-          <div className="flex flex-col gap-6 mt-6 w-full">
-            <div className="p-6 text-center border-4 border-gray-300 rounded-2xl shadow-lg bg-white text-black">
-              <h2 className="text-xl font-bold">Ratings</h2>
-              <div className="flex justify-center space-x-2 text-yellow-400 text-3xl mt-2">
+          <div className="grid grid-cols-2 gap-8 mt-10">
+            <div className="bg-white p-6 rounded-3xl shadow-xl text-center">
+              <h2 className="text-2xl font-bold text-gray-700 mb-4">Ratings</h2>
+              <div className="flex justify-center text-yellow-400 text-4xl">
                 {"⭐".repeat(userData?.ratings || 0)}
                 {"☆".repeat(5 - (userData?.ratings || 0))}
               </div>
             </div>
 
-            <div className="p-6 text-center border-4 border-gray-300 rounded-2xl shadow-lg bg-gray-100 text-black">
-              <h2 className="text-xl font-bold">Your Service Images</h2>
-              <div className="flex justify-center gap-4 mt-4 flex-wrap">
+            <div className="bg-gray-50 p-6 rounded-3xl shadow-xl text-center">
+              <h2 className="text-2xl font-bold text-gray-700 mb-4">Service Images</h2>
+              <div className="flex justify-center gap-3 flex-wrap">
                 {userData?.service_images?.length > 0 ? (
-                  userData.service_images.map((image, index) => (
+                  userData.service_images.map((img, idx) => (
                     <img
-                      key={index}
-                      src={image}
-                      alt="Service"
-                      className="w-32 h-32 object-cover rounded-lg shadow-md"
+                      key={idx}
+                      src={img}
+                      alt="service"
+                      className="w-28 h-28 object-cover rounded-xl shadow"
                     />
                   ))
                 ) : (
-                  <p>No service images uploaded</p>
+                  <p className="text-gray-500">No images uploaded</p>
                 )}
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
