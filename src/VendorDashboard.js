@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 export default function VendorDashboard() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // ✅ Get user details from localStorage
   const email = localStorage.getItem("userEmail");
   const authToken = localStorage.getItem("authToken");
   const userRole = localStorage.getItem("userRole");
@@ -58,8 +58,8 @@ export default function VendorDashboard() {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-orange-400 to-yellow-300 p-4 flex justify-between items-center shadow-md">
+      {/* ✅ Header */}
+      <header className="bg-orange-300 p-4 flex justify-between items-center shadow-md">
         <img src="/WEDNEST_LOGO.png" alt="WedNest Logo" className="h-20 w-auto" />
         <button
           onClick={handleLogout}
@@ -70,12 +70,13 @@ export default function VendorDashboard() {
       </header>
 
       <div className="flex">
-        {/* Sidebar */}
+        {/* ✅ Sidebar */}
         <div
-          className="p-6 w-1/4 text-center bg-cover bg-center shadow-xl flex flex-col justify-between min-h-screen"
+          className="p-6 w-1/4 text-center bg-cover bg-center shadow-lg flex flex-col justify-between min-h-screen"
           style={{ backgroundImage: "url('/bgdash.jpeg')" }}
         >
-          <div className="w-32 h-32 mb-4 rounded-full mx-auto overflow-hidden border-4 border-white shadow-md">
+          {/* Profile Picture */}
+          <div className="w-32 h-32 mb-4 rounded-full mx-auto overflow-hidden">
             <img
               src={userData?.profile_image || "/profile.png"}
               alt="Profile"
@@ -83,13 +84,16 @@ export default function VendorDashboard() {
             />
           </div>
 
-          <p className="font-semibold text-lg text-black">@{userData?.username || "Loading..."}</p>
+          <p className="font-semibold text-lg text-black">
+            @{userData?.username || "Loading..."}
+          </p>
           <p className="text-black">{userData?.email || "No email found"}</p>
           <p className="text-lg font-semibold mt-4 text-black">Business Name</p>
           <p className="text-black">{userData?.business_name || "Not Set"}</p>
           <p className="text-lg font-semibold mt-4 text-black">Vendor Type</p>
           <p className="text-black">{userData?.vendor_type || "Not Set"}</p>
 
+          {/* ✅ Edit Profile Button */}
           <button
             onClick={() => navigate("/vendor-profile")}
             className="mt-6 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
@@ -98,19 +102,19 @@ export default function VendorDashboard() {
           </button>
         </div>
 
-        {/* Main Content */}
+        {/* ✅ Main Content */}
         <div
-          className="flex flex-col w-3/4 p-6 relative"
+          className="flex flex-col w-3/4 p-6"
           style={{
             backgroundImage: "url('/vendorbg.jpeg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
+          {/* ✅ Dashboard Tiles */}
           <div className="grid grid-cols-3 gap-6">
             <div
-              whileHover={{ scale: 1.05 }}
-              className="p-6 rounded-xl text-black bg-cover bg-center shadow-lg h-[250px]"
+              className="p-6 rounded-lg text-black bg-cover bg-center shadow-md h-[250px]"
               style={{ backgroundImage: "url('/bgcouple.jpg')" }}
             >
               <h2 className="text-xl font-semibold">What You Earned?</h2>
@@ -118,8 +122,7 @@ export default function VendorDashboard() {
             </div>
 
             <div
-              whileHover={{ scale: 1.05 }}
-              className="p-6 rounded-xl text-center text-black bg-cover bg-center shadow-lg h-[250px]"
+              className="p-6 rounded-lg text-center text-black bg-cover bg-center shadow-md h-[250px]"
               style={{ backgroundImage: "url('/bgcouple.jpg')" }}
             >
               <h2 className="text-xl font-semibold">Coming Up</h2>
@@ -137,26 +140,17 @@ export default function VendorDashboard() {
             </div>
 
             <div
-              whileHover={{ scale: 1.05 }}
-              className="p-6 rounded-xl text-black bg-cover bg-center shadow-lg h-[250px] flex flex-col justify-between"
+              className="p-6 rounded-lg text-black bg-cover bg-center shadow-md h-[250px]"
               style={{ backgroundImage: "url('/bgcouple.jpg')" }}
             >
-              <div>
-                <h2 className="text-xl font-semibold">Bookings & Requests</h2>
-                <p className="mt-2">Manage all your service requests</p>
-              </div>
-              <button
-                onClick={() => navigate("/vendor-requests")}
-                className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition"
-              >
-                View Now
-              </button>
+              <h2 className="text-xl font-semibold">Bookings and Requests</h2>
+              <p className="mt-2">Manage all your service requests</p>
             </div>
           </div>
 
-          {/* Ratings & Service Images */}
+          {/* ✅ Ratings & Service Images */}
           <div className="flex flex-col gap-6 mt-6 w-full">
-            <div className="p-6 text-center border-4 border-gray-300 rounded-lg shadow-xl bg-white text-black">
+            <div className="p-6 text-center border-4 border-gray-300 rounded-lg shadow-lg bg-white text-black">
               <h2 className="text-xl font-semibold">Ratings</h2>
               <div className="flex justify-center space-x-2 text-yellow-400 text-3xl">
                 {"⭐".repeat(userData?.ratings || 0)}
@@ -164,9 +158,9 @@ export default function VendorDashboard() {
               </div>
             </div>
 
-            <div className="p-6 text-center border-4 border-gray-300 rounded-lg shadow-xl bg-gray-100 text-black">
+            <div className="p-6 text-center border-4 border-gray-300 rounded-lg shadow-lg bg-gray-200 text-black">
               <h2 className="text-xl font-semibold">Your Service Images</h2>
-              <div className="flex justify-center gap-4 mt-4 flex-wrap">
+              <div className="flex justify-center gap-4 mt-4">
                 {userData?.service_images?.length > 0 ? (
                   userData.service_images.map((image, index) => (
                     <img
@@ -182,15 +176,6 @@ export default function VendorDashboard() {
               </div>
             </div>
           </div>
-
-          {/* Floating Bookings & Requests button */}
-          <button
-            
-            className="fixed bottom-6 right-6 bg-orange-500 text-white px-6 py-3 rounded-full shadow-xl hover:bg-orange-600 transition text-lg"
-            onClick={() => navigate("/vendor-requests")}
-          >
-            Bookings & Requests
-          </button>
         </div>
       </div>
     </div>
