@@ -29,7 +29,7 @@ export default function VendorRequests() {
     };
 
     fetchRequests();
-  }, [vendor_id, navigate]);
+  }, [vendor_id]);
 
   if (loading) {
     return (
