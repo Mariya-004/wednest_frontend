@@ -7,6 +7,9 @@ export default function VendorDashboard() {
   const navigate = useNavigate();
 
   const user_id = localStorage.getItem("user_id");
+  const email = localStorage.getItem("userEmail");
+  const userRole = localStorage.getItem("userRole");
+
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
   useEffect(() => {
@@ -22,8 +25,6 @@ export default function VendorDashboard() {
         }
       } catch (error) {
         console.error("Error fetching vendor data:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -33,25 +34,35 @@ export default function VendorDashboard() {
         const data = await response.json();
 
         if (response.ok && data.status === "success") {
+          const bookings = data.data.map((booking) => {
+            if (booking.couple_id) {
+              return `${booking.couple_id.username} - ${booking.couple_id.email} - ${new Date(
+                booking.couple_id.wedding_date
+              ).toLocaleDateString()}`;
+            }
+            return "Invalid booking data";
+          });
+
           setUserData((prevData) => ({
             ...prevData,
-            upcoming_bookings: data.data.map(
-              (booking) =>
-                `${booking.couple_id.username} - ${booking.couple_id.email} - ${new Date(
-                  booking.couple_id.wedding_date
-                ).toLocaleDateString()}`
-            ),
+            upcoming_bookings: bookings,
           }));
         } else {
           console.error("Failed to fetch upcoming bookings:", data.message);
         }
       } catch (error) {
         console.error("Error fetching upcoming bookings:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchUserData();
-    fetchUpcomingBookings();
+    const loadData = async () => {
+      await fetchUserData();
+      await fetchUpcomingBookings();
+    };
+
+    loadData();
   }, [user_id, navigate]);
 
   const handleLogout = () => {
@@ -63,7 +74,7 @@ export default function VendorDashboard() {
     navigate("/vendor-requests");
   };
 
-  if (loading) {
+  if (loading || !userData) {
     return (
       <div className="flex justify-center items-center min-h-screen text-lg">
         Loading...
@@ -73,7 +84,7 @@ export default function VendorDashboard() {
 
   return (
     <div className="min-h-screen">
-      {/* Header (unchanged) */}
+      {/* Header */}
       <header className="bg-orange-300 p-4 flex justify-between items-center shadow-md">
         <img
           src="/WEDNEST_LOGO.png"
@@ -89,7 +100,7 @@ export default function VendorDashboard() {
       </header>
 
       <div className="flex">
-        {/* Sidebar (unchanged) */}
+        {/* Sidebar */}
         <div
           className="p-6 w-1/4 text-center bg-cover bg-center shadow-lg flex flex-col justify-between min-h-screen"
           style={{ backgroundImage: "url('/bgdash.jpeg')" }}
@@ -119,14 +130,13 @@ export default function VendorDashboard() {
           </button>
         </div>
 
-        {/* Main Content - elegant & classy */}
+        {/* Main Content */}
         <div className="flex flex-col w-3/4 p-6 bg-gradient-to-b from-white to-blue-50 min-h-screen">
           <div className="grid grid-cols-2 gap-8">
             <div
               className="p-6 rounded-3xl text-black shadow-xl transition-transform hover:scale-105"
               style={{
                 background: "linear-gradient(135deg, #ffffff, #ffe8d9)",
-                height: "auto",
               }}
             >
               <h2 className="text-2xl font-bold mb-4 text-center">Coming Up</h2>
