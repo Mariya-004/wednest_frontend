@@ -12,7 +12,7 @@ export default function VendorDashboard() {
   const user_id = localStorage.getItem("user_id");
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
-  console.log("Auth Token:", token); // Added console.log
+  console.log("Auth Token:", authToken); // Added console.log
 
   useEffect(() => {
     const fetchUserData = async () => {
