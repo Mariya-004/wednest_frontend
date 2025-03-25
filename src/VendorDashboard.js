@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 export default function VendorDashboard() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [upcomingBookings, setUpcomingBookings] = useState([]);
   const navigate = useNavigate();
 
   const email = localStorage.getItem("userEmail");
@@ -39,7 +38,7 @@ export default function VendorDashboard() {
     const fetchUpcomingBookings = async () => {
       try {
         const response = await fetch(
-          `${API_URL}/api/couple/dashboard/${couple_id}`,
+          `${API_URL}/api/vendor/requests/${user_id}`,
           {
             headers: { Authorization: `Bearer ${authToken}` },
           }
@@ -47,10 +46,12 @@ export default function VendorDashboard() {
         const data = await response.json();
 
         if (response.ok && data.status === "success") {
-          setUpcomingBookings(data.data.booked_vendors.map(vendor => ({
-            ...vendor,
-            wedding_date: data.data.wedding_date
-          })));
+          setUserData(prevData => ({
+            ...prevData,
+            upcoming_bookings: data.data.map(booking => (
+              `${booking.couple_id.username} - ${booking.couple_id.email} - ${new Date(booking.couple_id.wedding_date).toLocaleDateString()}`
+            ))
+          }));
         } else {
           console.error("Failed to fetch upcoming bookings:", data.message);
         }
@@ -133,10 +134,10 @@ export default function VendorDashboard() {
             >
               <h2 className="text-xl font-bold">Coming Up</h2>
               <ul className="mt-2 text-lg text-center">
-                {upcomingBookings.length > 0 ? (
-                  upcomingBookings.map((booking, index) => (
+                {userData?.upcoming_bookings?.length > 0 ? (
+                  userData.upcoming_bookings.map((booking, index) => (
                     <li key={index} className="mt-1">
-                      {booking.couple_id.username} - {booking.couple_id.email} - {booking.wedding_date}
+                      {booking}
                     </li>
                   ))
                 ) : (
