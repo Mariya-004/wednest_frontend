@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pie } from "react-chartjs-2";
-import Chart from 'chart.js/auto';
 
 export default function CoupleDashboard() {
   const navigate = useNavigate();
