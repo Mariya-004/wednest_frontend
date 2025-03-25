@@ -163,18 +163,7 @@ export default function VendorDashboard() {
               </p>
             </div>
 
-            <div
-              className="p-6 rounded-3xl text-black shadow-xl flex flex-col items-center justify-center transition-transform hover:scale-105"
-              style={{
-                background: "linear-gradient(135deg, #ecfdf5, #e0f7fa)",
-                height: "250px",
-              }}
-            >
-              <h2 className="text-2xl font-bold mb-3">Earnings</h2>
-              <p className="text-4xl font-extrabold text-green-600">
-                ${userData?.earnings || 0}
-              </p>
-            </div>
+            
           </div>
 
           <div className="flex flex-col gap-8 mt-10">
