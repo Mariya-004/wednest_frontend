@@ -133,7 +133,7 @@ export default function VendorDashboard() {
                 {upcomingBookings.length > 0 ? (
                   upcomingBookings.map((booking, index) => (
                     <li key={index} className="mt-1">
-                      {booking.couple_id.username} - {booking.couple_id.email} - {booking.couple_id.wedding_date}
+                      {booking.couple_id.username} - {booking.couple_id.email} - {booking.wedding_date}
                     </li>
                   ))
                 ) : (
