@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+
 
 export default function VendorDashboard() {
   const [userData, setUserData] = useState(null);
