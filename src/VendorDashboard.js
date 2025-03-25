@@ -132,22 +132,36 @@ export default function VendorDashboard() {
         <div className="flex flex-col w-3/4 p-6 bg-gradient-to-b from-white to-blue-50 min-h-screen">
           <div className="grid grid-cols-3 gap-8">
             <div
-              className="p-6 rounded-3xl text-black shadow-xl flex flex-col items-center justify-center transition-transform hover:scale-105"
+              className="p-6 rounded-3xl text-black shadow-xl transition-transform hover:scale-105"
               style={{
                 background: "linear-gradient(135deg, #ffffff, #ffe8d9)",
-                height: "250px",
+                height: "auto",
               }}
             >
-              <h2 className="text-2xl font-bold mb-2">Coming Up</h2>
-              <ul className="mt-2 text-md text-center space-y-1">
-                {userData?.upcoming_bookings?.length > 0 ? (
-                  userData.upcoming_bookings.map((booking, index) => (
-                    <li key={index}>{booking}</li>
-                  ))
-                ) : (
-                  <p>No upcoming bookings</p>
-                )}
-              </ul>
+              <h2 className="text-2xl font-bold mb-4 text-center">Coming Up</h2>
+              {userData?.upcoming_bookings?.length > 0 ? (
+                <div className="grid gap-4">
+                  {userData.upcoming_bookings.map((booking, index) => {
+                    const [name, email, date] = booking.split(" - ");
+                    return (
+                      <div
+                        key={index}
+                        className="border border-gray-200 rounded-xl shadow p-4 hover:bg-orange-50 transition"
+                      >
+                        <p className="text-lg font-semibold text-gray-700">
+                          {name}
+                        </p>
+                        <p className="text-sm text-gray-500">{email}</p>
+                        <p className="text-sm text-gray-600 font-medium">
+                          Wedding: {date}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-center text-gray-500">No upcoming bookings</p>
+              )}
             </div>
 
             <div
