@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
   const couple_id = localStorage.getItem("user_id");
-  const authToken = localStorage.getItem("authToken");
+  const authToken = localStorage.getItem("coupleAuthToken"); // Changed storage key
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([]);

@@ -15,7 +15,9 @@ export default function VendorDashboard() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/vendor/dashboard/${user_id}`);
+        const response = await fetch(`${API_URL}/api/vendor/dashboard/${user_id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
+        });
         const data = await response.json();
 
         if (response.ok && data.status === "success") {
@@ -30,7 +32,9 @@ export default function VendorDashboard() {
 
     const fetchUpcomingBookings = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/vendor/requests/${user_id}`);
+        const response = await fetch(`${API_URL}/api/vendor/requests/${user_id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
+        });
         const data = await response.json();
 
         if (response.ok && data.status === "success") {

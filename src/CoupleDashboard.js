@@ -18,7 +18,9 @@ export default function CoupleDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/couple/dashboard/${user_id}`);
+        const response = await fetch(`${API_URL}/api/couple/dashboard/${user_id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("coupleAuthToken")}` }, // Add Authorization header
+        });
         if (!response.ok) {
           const errorText = await response.text();
           throw new Error(`Error fetching dashboard: ${errorText}`);
@@ -41,7 +43,9 @@ export default function CoupleDashboard() {
   useEffect(() => {
     const fetchVendorRequests = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/couple/requests/${user_id}`);
+        const response = await fetch(`${API_URL}/api/couple/requests/${user_id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("coupleAuthToken")}` }, // Add Authorization header
+        });
         if (!response.ok) {
           const errorText = await response.text();
           throw new Error(`Error fetching vendor requests: ${errorText}`);
@@ -64,7 +68,9 @@ export default function CoupleDashboard() {
   useEffect(() => {
     const fetchCartData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/cart/${user_id}`);
+        const response = await fetch(`${API_URL}/api/cart/${user_id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("coupleAuthToken")}` }, // Add Authorization header
+        });
         if (!response.ok) {
           const errorText = await response.text();
           throw new Error(`Error fetching cart data: ${errorText}`);
