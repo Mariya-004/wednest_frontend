@@ -19,7 +19,7 @@ export default function CoupleDashboard() {
     const fetchDashboardData = async () => {
       try {
         const response = await fetch(`${API_URL}/api/couple/dashboard/${user_id}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` }, // Add Authorization header
+         // headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` }, // Add Authorization header
         });
         if (!response.ok) {
           const errorText = await response.text();
@@ -69,7 +69,7 @@ export default function CoupleDashboard() {
     const fetchCartData = async () => {
       try {
         const response = await fetch(`${API_URL}/api/cart/${user_id}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("coupleAuthToken")}` }, // Add Authorization header
+          //headers: { Authorization: `Bearer ${localStorage.getItem("coupleAuthToken")}` }, // Add Authorization header
         });
         if (!response.ok) {
           const errorText = await response.text();

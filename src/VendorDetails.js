@@ -21,7 +21,7 @@ const VendorDetails = () => {
     const fetchData = async () => {
       try {
         const vendorRes = await fetch(`${API_URL}/api/vendor/details/${vendor_id}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` }, // Add Authorization header
+          //headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` }, // Add Authorization header
         });
         if (!vendorRes.ok) throw new Error(`HTTP error! Status: ${vendorRes.status}`);
         const vendorData = await vendorRes.json();
@@ -72,7 +72,7 @@ const VendorDetails = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Add Authorization header
+          //Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Add Authorization header
         },
         body: JSON.stringify({ couple_id, vendor_id }),
       });
@@ -96,7 +96,7 @@ const VendorDetails = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Add Authorization header
+          //Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Add Authorization header
         },
       }
     );
@@ -138,7 +138,7 @@ const VendorDetails = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Add Authorization header
+          //Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Add Authorization header
         },
         body: JSON.stringify(requestBody),
       });
