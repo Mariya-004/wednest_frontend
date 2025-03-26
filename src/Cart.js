@@ -170,7 +170,7 @@ const Cart = () => {
                   >
                     <div className="flex items-center gap-4">
                       <img
-                        src={getImageUrl(item.vendor_id.service_images[0])}
+                        src={getImageUrl(item.vendor_id.service_images && item.vendor_id.service_images[0])}
                         alt={item.vendor_id.businessName}
                         className="w-16 h-16 object-cover rounded-full shadow"
                       />
