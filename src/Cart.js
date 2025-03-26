@@ -44,7 +44,29 @@ const Cart = () => {
                 const vendorData = await vendorRes.json();
 
                 if (vendorData.status === "success") {
-                  return { ...item, vendor_id: vendorData.data };
+                  const requestIdRes = await fetch(
+                    `${API_URL}/api/request-id?couple_id=${couple_id}&vendor_id=${item.vendor_id._id}`,
+                    {
+                      headers: { Authorization: `Bearer ${authToken}` },
+                    }
+                  );
+                  const requestIdData = await requestIdRes.json();
+
+                  if (requestIdData.status === "success") {
+                    const requestStatusRes = await fetch(
+                      `${API_URL}/api/request/status/${requestIdData.request_id}`,
+                      {
+                        headers: { Authorization: `Bearer ${authToken}` },
+                      }
+                    );
+                    const requestStatusData = await requestStatusRes.json();
+
+                    return {
+                      ...item,
+                      vendor_id: vendorData.data,
+                      status: requestStatusData.data.status || "Declined",
+                    };
+                  }
                 }
               } catch (error) {
                 console.error("Error fetching vendor details: ", error);
