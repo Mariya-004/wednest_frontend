@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
   const couple_id = localStorage.getItem("user_id");
-  const authToken = localStorage.getItem("coupleAuthToken"); // Changed storage key
+  const authToken = localStorage.getItem("authToken"); // Changed storage key
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([]);
@@ -197,9 +197,9 @@ const Cart = () => {
                         handleRemoveItem(item.vendor_id._id);
                       }}
                       className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow"
-                      disabled={item.status === "Confirmed by Vendor"}
+                      disabled={item.status === "Accepted"}
                     >
-                      {item.status === "Confirmed by Vendor" ? "Locked" : "Remove"}
+                      {item.status === "Accepted" ? "Locked" : "Remove"}
                     </button>
                   </div>
                 ))}
