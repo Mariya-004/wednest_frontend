@@ -41,7 +41,7 @@ const Login = () => {
   
         // ✅ Store user details in localStorage
         localStorage.setItem("userEmail", email);
-        if (data.data.token) localStorage.setItem("authToken", data.data.token); // Changed storage key
+        localStorage.setItem("authToken", data.token); // Changed storage key
         console.log("Auth Token:", data.data.token); // Added console.log
         localStorage.setItem("userRole", role);
         localStorage.setItem("user_id", data.data?.user_id || "");
