@@ -66,6 +66,12 @@ const Cart = () => {
                       vendor_id: vendorData.data,
                       status: requestStatusData.data.status || "Declined",
                     };
+                  } else {
+                    return {
+                      ...item,
+                      vendor_id: vendorData.data,
+                      status: "Declined",
+                    };
                   }
                 }
               } catch (error) {
