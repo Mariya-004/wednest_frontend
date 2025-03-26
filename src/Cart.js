@@ -109,7 +109,7 @@ const Cart = () => {
         setCartItems((prev) =>
           prev.filter((item) => item.vendor_id._id !== vendor_id)
         );
-        setMessage({ type: "success", text: "Item removed from cart." });
+        setMessage({ type: "success", text: "Item removed from cart and associated request deleted." });
       } else {
         setMessage({ type: "error", text: data.message });
       }
