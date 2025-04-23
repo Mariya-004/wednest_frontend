@@ -10,7 +10,7 @@ export default function ProfileSetup() {
     contactNumber: "",
     weddingDate: "",
     budgetRange: "",
-    user_id: "", // Dynamically set this from localStorage/session
+    user_id: "", // Dynamically set this from sessionStorage
   });
 
   const [profileImage, setProfileImage] = useState(null);
@@ -18,9 +18,9 @@ export default function ProfileSetup() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // ✅ Load user_id dynamically (assuming stored in localStorage)
+  // ✅ Load user_id dynamically (assuming stored in sessionStorage)
   useEffect(() => {
-    const storedUserId = localStorage.getItem("user_id"); // Adjust as needed
+    const storedUserId = sessionStorage.getItem("user_id"); // Adjust as needed
     if (storedUserId) {
       setFormData((prev) => ({ ...prev, user_id: storedUserId }));
     }

@@ -6,9 +6,9 @@ export default function VendorDashboard() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const user_id = localStorage.getItem("user_id");
-  const email = localStorage.getItem("userEmail");
-  const userRole = localStorage.getItem("userRole");
+  const user_id = sessionStorage.getItem("user_id");
+  const email = sessionStorage.getItem("userEmail");
+  const userRole = sessionStorage.getItem("userRole");
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 

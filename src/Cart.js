@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
-  const couple_id = localStorage.getItem("user_id");
-  const authToken = localStorage.getItem("authToken"); // Changed storage key
+  const couple_id = sessionStorage.getItem("user_id");
+  const authToken = sessionStorage.getItem("authToken");
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([]);
@@ -228,4 +228,3 @@ const Cart = () => {
 };
 
 export default Cart;
-//

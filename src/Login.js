@@ -39,12 +39,12 @@ const Login = () => {
         setMessage("Login successful! Redirecting...");
         setMessageType("success");
   
-        // ✅ Store user details in localStorage
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("authToken", data.data?.token); // Changed storage key
-        const authToken=localStorage.getItem("authToken"); // Added console.log
+        // ✅ Store user details in sessionStorage
+        sessionStorage.setItem("userEmail", email);
+        sessionStorage.setItem("authToken", data.data?.token); // Changed storage key
+        const authToken = sessionStorage.getItem("authToken"); // Added console.log
         console.log("Auth Token:", authToken); // Added console.log
-        localStorage.setItem("userRole", role);
+        sessionStorage.setItem("userRole", role);
         localStorage.setItem("user_id", data.data?.user_id || "");
         localStorage.setItem("user_type", data.data?.user_type || "");
   

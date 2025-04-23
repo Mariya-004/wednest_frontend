@@ -30,6 +30,7 @@ const Signup = () => {
       const result = await response.json();
 
       if (response.ok) {
+        sessionStorage.setItem("user_id", data.user_id);
         setMessage("Account created successfully! Redirecting to login...");
         setMessageType("success");
 

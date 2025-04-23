@@ -7,7 +7,7 @@ export default function VendorRequests() {
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
-  const vendor_id = localStorage.getItem("user_id");
+  const vendor_id = sessionStorage.getItem("user_id");
 
   useEffect(() => {
     const fetchRequests = async () => {

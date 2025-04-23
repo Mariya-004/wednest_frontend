@@ -16,7 +16,7 @@ const VendorDetails = () => {
   const [isVendorAlreadyInCart, setIsVendorAlreadyInCart] = useState(false);
 
   useEffect(() => {
-    const couple_id = localStorage.getItem("user_id");
+    const couple_id = sessionStorage.getItem("user_id");
 
     const fetchData = async () => {
       try {
@@ -60,7 +60,7 @@ const VendorDetails = () => {
 
   const handleRequest = async () => {
     setRequestStatus(null);
-    const couple_id = localStorage.getItem("user_id");
+    const couple_id = sessionStorage.getItem("user_id");
 
     if (!couple_id) {
       setRequestStatus({ type: "error", message: "You must be logged in as a couple to request." });
@@ -111,7 +111,7 @@ const VendorDetails = () => {
 
   const handleAddToCart = async () => {
     setCartMessage(null);
-    const couple_id = localStorage.getItem("user_id");
+    const couple_id = sessionStorage.getItem("user_id");
 
     if (!couple_id) {
       setCartMessage("You must be logged in to add items to your cart.");

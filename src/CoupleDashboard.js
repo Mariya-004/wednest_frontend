@@ -11,7 +11,7 @@ export default function CoupleDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
   const [vendorRequests, setVendorRequests] = useState([]);
   const [cartData, setCartData] = useState([]); // Add this state
-  const user_id = localStorage.getItem("user_id");
+  const user_id = sessionStorage.getItem("user_id");
   const API_URL = (process.env.REACT_APP_API_URL || "http://localhost:3000").replace(/\/$/, "");
 
   // Fetch couple dashboard data

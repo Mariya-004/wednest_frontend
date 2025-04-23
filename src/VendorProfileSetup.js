@@ -24,9 +24,9 @@ const VendorProfileSetup = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // ✅ Load user_id from localStorage once
+  // ✅ Load user_id from sessionStorage once
   useEffect(() => {
-    const storedUserId = localStorage.getItem("user_id");
+    const storedUserId = sessionStorage.getItem("user_id");
     if (storedUserId) {
       setVendorData((prev) => ({ ...prev, user_id: storedUserId }));
     }

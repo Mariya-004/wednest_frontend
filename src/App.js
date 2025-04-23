@@ -20,6 +20,8 @@ import VendorDetails from "./VendorDetails";
 import Cart from "./Cart"; // Import the Cart component
 import VendorRequests from "./VendorRequests";   
 
+const userRole = sessionStorage.getItem("userRole");
+
 function App() {
   return (
     <Router>
@@ -49,3 +51,5 @@ function App() {
 }
 
 export default App;
+
+sessionStorage.setItem("authToken", token);
