@@ -36,7 +36,7 @@ const Login = () => {
       setLoading(false);
   
       if (response.ok && data.status === "success") {
-        if (data.data?.role !== role) {
+        if (data.data?.role?.toLowerCase() !== role.toLowerCase()) {
           setMessage("Invalid role.");
           setMessageType("error");
           setLoading(false);
