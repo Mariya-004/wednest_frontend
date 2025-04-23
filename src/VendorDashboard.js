@@ -107,7 +107,7 @@ export default function VendorDashboard() {
         {/* Sidebar */}
         <div
           className="p-6 w-1/4 text-center bg-cover bg-center shadow-lg flex flex-col justify-between min-h-screen"
-          style={{ backgroundImage: "url('/bgdash.jpeg')" }}
+          style={{ backgroundImage: "url('/bgdash.jpeg.jpg')" }}
         >
           <div className="w-32 h-32 mb-4 rounded-full mx-auto overflow-hidden">
             <img
