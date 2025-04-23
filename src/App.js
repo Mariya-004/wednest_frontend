@@ -19,6 +19,7 @@ import Events from "./Events";
 import VendorDetails from "./VendorDetails"; 
 import Cart from "./Cart"; // Import the Cart component
 import VendorRequests from "./VendorRequests";   
+import Checkout from "./Checkout"; // Import the Checkout component
 
 const userRole = sessionStorage.getItem("userRole");
 
