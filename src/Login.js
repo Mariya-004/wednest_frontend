@@ -36,6 +36,13 @@ const Login = () => {
       setLoading(false);
   
       if (response.ok && data.status === "success") {
+        if (data.data?.role !== role) {
+          setMessage("Invalid role.");
+          setMessageType("error");
+          setLoading(false);
+          return;
+        }
+
         setMessage("Login successful! Redirecting...");
         setMessageType("success");
   
@@ -57,9 +64,8 @@ const Login = () => {
       } else {
         setMessage(data.message || "Login failed. Please try again.");
         setMessageType("error");
-  
-    }
-   } catch (error) {
+      }
+    } catch (error) {
       console.error("Login error:", error);
       setMessage("Network error. Please try again later.");
       setMessageType("error");
