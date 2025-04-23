@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Checkout = () => {
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
   const couple_id = sessionStorage.getItem("user_id");
-  const authToken = sesionStorage.getItem("authToken");
+  const authToken = sessionStorage.getItem("authToken");
   const navigate = useNavigate();
 
   const [lockedItems, setLockedItems] = useState([]);
