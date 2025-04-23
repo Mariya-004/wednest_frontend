@@ -45,6 +45,7 @@ function App() {
         <Route path="/vendor/:vendor_id" element={<VendorDetails/>} />
         <Route path="/Cart" element={<Cart/>} /> 
         <Route path="/vendor-requests" element={<VendorRequests />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </Router>
   );
