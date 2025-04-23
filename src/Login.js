@@ -36,6 +36,8 @@ const Login = () => {
       setLoading(false);
   
       if (response.ok && data.status === "success") {
+        console.log("Selected Role:", role);
+        console.log("Backend Role:", data.data?.role);
         if (data.data?.role?.toLowerCase() !== role.toLowerCase()) {
           setMessage("Invalid role.");
           setMessageType("error");
