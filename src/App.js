@@ -52,4 +52,4 @@ function App() {
 
 export default App;
 
-sessionStorage.setItem("authToken", token);
+sessionStorage.setItem("authToken", "");
