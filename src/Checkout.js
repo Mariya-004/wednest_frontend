@@ -9,7 +9,9 @@ const Checkout = () => {
 
   const [lockedItems, setLockedItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [paymentConfirmed, setPaymentConfirmed] = useState(false); // New state
+  const [paymentConfirmed, setPaymentConfirmed] = useState(
+    sessionStorage.getItem("paymentConfirmed") === "true"
+  );
 
   useEffect(() => {
     const fetchLockedItems = async () => {
@@ -98,6 +100,10 @@ const Checkout = () => {
 
     fetchLockedItems();
   }, [API_URL, couple_id, authToken]);
+
+  useEffect(() => {
+    sessionStorage.setItem("paymentConfirmed", paymentConfirmed);
+  }, [paymentConfirmed]);
 
   const totalCost = lockedItems.reduce((acc, item) => acc + item.price, 0);
 
@@ -197,7 +203,6 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;               
-               
+export default Checkout;
 
- 
+
