@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
-  const couple_id = sessionStorage.getItem("user_id");
-  const authToken = sessionStorage.getItem("authToken");
+  const couple_id = localStorage.getItem("user_id");
+  const authToken = localStorage.getItem("authToken"); // Changed storage key
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([]);
@@ -219,6 +219,13 @@ const Cart = () => {
                   </p>
                 )}
               </div>
+              <button
+  onClick={() => navigate("/checkout")}
+  className="fixed bottom-6 right-6 bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg shadow-lg text-lg"
+>
+  Proceed to Checkout
+</button>
+
             </>
           )}
         </div>
@@ -228,3 +235,4 @@ const Cart = () => {
 };
 
 export default Cart;
+//
