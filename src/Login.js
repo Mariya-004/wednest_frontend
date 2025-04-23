@@ -45,8 +45,8 @@ const Login = () => {
         const authToken = sessionStorage.getItem("authToken"); // Added console.log
         console.log("Auth Token:", authToken); // Added console.log
         sessionStorage.setItem("userRole", role);
-        localStorage.setItem("user_id", data.data?.user_id || "");
-        localStorage.setItem("user_type", data.data?.user_type || "");
+        sessionStorage.setItem("user_id", data.data?.user_id || "");
+        sessionStorage.setItem("user_type", data.data?.user_type || "");
   
         // ✅ Redirect immediately
         if (role === "Vendor") {  

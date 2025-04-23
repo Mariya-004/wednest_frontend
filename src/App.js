@@ -21,7 +21,6 @@ import Cart from "./Cart"; // Import the Cart component
 import VendorRequests from "./VendorRequests";   
 
 const userRole = sessionStorage.getItem("userRole");
-const token = ''; // Define the token variable with an appropriate value or fetch it dynamically
 
 function App() {
   return (
