@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
-  const couple_id = localStorage.getItem("user_id");
-  const authToken = localStorage.getItem("authToken"); // Changed storage key
+  const couple_id = sessionStorage.getItem("user_id");
+  const authToken = sessionStorage.getItem("authToken"); // Changed storage key
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([]);
@@ -17,10 +17,10 @@ const Cart = () => {
       try {
         const [cartRes, budgetRes] = await Promise.all([
           fetch(`${API_URL}/api/cart/${couple_id}`, {
-            headers: { Authorization: `Bearer ${authToken}` },
+            //headers: { Authorization: `Bearer ${authToken}` },
           }),
           fetch(`${API_URL}/api/couple/budget/${couple_id}`, {
-            headers: { Authorization: `Bearer ${authToken}` },
+            //headers: { Authorization: `Bearer ${authToken}` },
           }),
         ]);
 
@@ -38,7 +38,7 @@ const Cart = () => {
                 const vendorRes = await fetch(
                   `${API_URL}/api/vendor/details/${item.vendor_id._id}`,
                   {
-                    headers: { Authorization: `Bearer ${authToken}` },
+                   // headers: { Authorization: `Bearer ${authToken}` },
                   }
                 );
                 const vendorData = await vendorRes.json();
@@ -47,7 +47,7 @@ const Cart = () => {
                   const requestIdRes = await fetch(
                     `${API_URL}/api/request-id?couple_id=${couple_id}&vendor_id=${item.vendor_id._id}`,
                     {
-                      headers: { Authorization: `Bearer ${authToken}` },
+                     // headers: { Authorization: `Bearer ${authToken}` },
                     }
                   );
                   const requestIdData = await requestIdRes.json();
@@ -56,7 +56,7 @@ const Cart = () => {
                     const requestStatusRes = await fetch(
                       `${API_URL}/api/request/status/${requestIdData.request_id}`,
                       {
-                        headers: { Authorization: `Bearer ${authToken}` },
+                       // headers: { Authorization: `Bearer ${authToken}` },
                       }
                     );
                     const requestStatusData = await requestStatusRes.json();
@@ -99,7 +99,7 @@ const Cart = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
+          //Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({ couple_id, vendor_id }),
       });
@@ -235,3 +235,4 @@ const Cart = () => {
 };
 
 export default Cart;
+//
